@@ -1,4 +1,4 @@
-package com.ecodb;
+package com.ecodb.eco_points;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
