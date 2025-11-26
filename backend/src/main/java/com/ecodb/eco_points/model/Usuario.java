@@ -33,7 +33,7 @@ public class Usuario {
     private String senha;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "tipo")
     private TipoUsuario role;
     
     
