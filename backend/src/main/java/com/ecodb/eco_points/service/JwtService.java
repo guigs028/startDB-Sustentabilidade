@@ -3,9 +3,13 @@ package com.ecodb.eco_points.service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,19 +23,20 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 
-    // Chave secreta vinda do application.properties
-    @Value("${jwt.secret:minha-chave-secreta-super-segura-change-me-in-production}")
+    private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
+
+    @Value("${jwt.secret}")
     private String secretKey;
 
     public String gerarToken(Usuario usuario) {
         return Jwts.builder()
-                .subject(usuario.getEmail()) // Quem é o dono do token
-                .claim("nome", usuario.getNome()) // Informações extras
+                .subject(usuario.getEmail()) 
+                .claim("nome", usuario.getNome()) 
                 .claim("tipo", usuario.getRole().toString())
-                .issuedAt(new Date()) // Quando foi criado
-                .expiration(gerarDataExpiracao()) // Quando expira
-                .signWith(getSigningKey()) // Assina com a chave secreta
-                .compact(); // Cria o token
+                .issuedAt(new Date()) 
+                .expiration(gerarDataExpiracao()) 
+                .signWith(getSigningKey()) 
+                .compact(); 
     }
 
     public String validarToken(String token) {
@@ -42,9 +47,10 @@ public class JwtService {
                     .parseSignedClaims(token)
                     .getPayload();
 
-            return claims.getSubject(); // Retorna o email
+            return claims.getSubject(); 
         } catch (Exception e) {
-            return null; // Token inválido
+            logger.error("Token inválido: {}", e.getMessage());
+            return null; 
         }
     }
 
@@ -53,10 +59,7 @@ public class JwtService {
     }
 
     private Date gerarDataExpiracao() {
-        Instant expiracao = LocalDateTime.now()
-                .plusHours(2)
-                .toInstant(ZoneOffset.of("-03:00"));
-        return Date.from(expiracao);
+       return Date.from(Instant.now().plus(2, ChronoUnit.HOURS));
     }
 }
 

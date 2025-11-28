@@ -26,7 +26,7 @@ public class LoginController {
             LoginResponseDTO response = authService.login(loginDTO);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(401).build();
         }
     }
 }

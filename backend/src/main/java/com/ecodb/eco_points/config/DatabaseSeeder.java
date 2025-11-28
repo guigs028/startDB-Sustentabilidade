@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 // import org.springframework.context.annotation.Profile;
 import org.springframework.boot.CommandLineRunner;
 
@@ -31,13 +32,16 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final MaterialRepository materialRepository;
     private final PontoColetaRepository pontoColetaRepository;
     private final DescarteRepository descarteRepository;
+
+    private final PasswordEncoder passwordEncoder;
     
     public DatabaseSeeder(UsuarioRepository usuarioRepository, MaterialRepository materialRepository,
-            PontoColetaRepository pontoColetaRepository, DescarteRepository descarteRepository) {
+            PontoColetaRepository pontoColetaRepository, DescarteRepository descarteRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.materialRepository = materialRepository;
         this.pontoColetaRepository = pontoColetaRepository;
         this.descarteRepository = descarteRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -65,18 +69,18 @@ public class DatabaseSeeder implements CommandLineRunner {
         System.out.println("Materiais criados.");
         
         // CRIAR USUÁRIOS 
-        String senhaPadrao = "$senhaqualquer"; // eu n hashei a senha apenas botei uma senha aleatoria aqui para todos os users
+        String senhaHasheada = passwordEncoder.encode("$senhaqualquer");
 
         Usuario joao = new Usuario();
         joao.setNome("Joao Gerador");
         joao.setEmail("gerador@teste.com");
-        joao.setSenha(senhaPadrao);
+        joao.setSenha(senhaHasheada);
         joao.setRole(TipoUsuario.GERADOR);
         
         Usuario maria = new Usuario();
         maria.setNome("Maria Coletora");
         maria.setEmail("coletor@teste.com");
-        maria.setSenha(senhaPadrao);
+        maria.setSenha(senhaHasheada);
         maria.setRole(TipoUsuario.COLETOR);
 
         usuarioRepository.saveAll(Arrays.asList(joao, maria));
