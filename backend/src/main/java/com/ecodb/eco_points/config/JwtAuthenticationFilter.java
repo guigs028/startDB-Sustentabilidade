@@ -34,7 +34,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        // 1. Extrair o token do header Authorization
         String authHeader = request.getHeader("Authorization");
         
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -42,18 +41,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 2. Remover "Bearer " do início
         String token = authHeader.substring(7);
 
-        // 3. Validar o token e extrair o email
         String email = jwtService.validarToken(token);
 
-        // 4. Se o token for válido e não houver autenticação ainda
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // 5. Carregar os detalhes do usuário
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-            // 6. Criar o objeto de autenticação
             UsernamePasswordAuthenticationToken authentication = 
                 new UsernamePasswordAuthenticationToken(
                     userDetails,
@@ -65,11 +59,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 new WebAuthenticationDetailsSource().buildDetails(request)
             );
 
-            // 7. Definir a autenticação no contexto de segurança
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        // 8. Continuar a cadeia de filtros
         filterChain.doFilter(request, response);
     }
 }
