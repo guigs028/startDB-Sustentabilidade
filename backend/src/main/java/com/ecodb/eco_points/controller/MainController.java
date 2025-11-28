@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class MainController {
     
-    // get 
+    // rota de health check
     @GetMapping("/status")
     public String checkStatus() {
         return "O sistema EcoPoints está rodando corretamente!";
