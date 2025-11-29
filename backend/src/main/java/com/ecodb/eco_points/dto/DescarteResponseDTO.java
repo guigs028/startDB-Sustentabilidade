@@ -2,6 +2,7 @@ package com.ecodb.eco_points.dto;
 
 import java.time.LocalDateTime;
 
+import com.ecodb.eco_points.model.Descarte;
 import com.ecodb.eco_points.model.enums.StatusDescarte;
 
 public record DescarteResponseDTO(
@@ -14,4 +15,23 @@ public record DescarteResponseDTO(
     String materialNome,
     String pontoColetaNome,
     String pontoColetaEndereco
-) {}
+) {
+
+    /**
+     * Construtor auxiliar para conversão de entidades para DTO
+     */
+    public DescarteResponseDTO(Descarte descarte) {
+        this(
+            descarte.getId(),
+            descarte.getDescricaoEspecifica(),
+            descarte.getQuantidade(),
+            descarte.getUnidadeMedida(),
+            descarte.getStatus(),
+            descarte.getDataCriacao(),
+            descarte.getMaterial().getNome(),
+            descarte.getPontoColeta().getNome(),
+            descarte.getPontoColeta().getEndereco()
+        );
+    }
+
+}
