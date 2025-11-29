@@ -36,11 +36,9 @@ public class DescarteService {
 
     @Transactional
     public Descarte criarSolicitacao(DescarteDTO dto, String emailUsuario) {
-        //verificar se o Ponto de Coleta existe
-        PontoColeta pontoColeta = pontoColetaRepository.findById(dto.pontoColeta())
+        PontoColeta pontoColeta = pontoColetaRepository.findById(dto.pontoColetaId())
                 .orElseThrow(() -> new IllegalArgumentException("Ponto de coleta não encontrado"));
 
-        //verificar se o Material existe
         Material material = materialRepository.findById(dto.materialId())
                 .orElseThrow(() -> new IllegalArgumentException("Material não encontrado"));
 
@@ -60,7 +58,7 @@ public class DescarteService {
         descarte.setUsuario(usuario);
         descarte.setDescricaoEspecifica(dto.descricao());
         descarte.setQuantidade(dto.quantidade());
-        descarte.setUnidadeMedida(dto.unMedida());
+        descarte.setUnidadeMedida(dto.unidadeMedida());
         descarte.setStatus(StatusDescarte.PENDENTE);
         descarte.setDataCriacao(LocalDateTime.now());
 
@@ -68,7 +66,6 @@ public class DescarteService {
     }
 
     public List<DescarteResponseDTO> listarHistorico(String emailUsuario) {
-        // recuperar usuário logado
         Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 
@@ -76,19 +73,8 @@ public class DescarteService {
         List<Descarte> descartes = descarteRepository
                 .findByUsuarioOrderByDataCriacaoDesc(usuario);
 
-        //converter para DTO
         return descartes.stream()
-                .map(d -> new DescarteResponseDTO(
-                        d.getId(),
-                        d.getDescricaoEspecifica(),
-                        d.getQuantidade(),
-                        d.getUnidadeMedida(),
-                        d.getStatus(),
-                        d.getDataCriacao(),
-                        d.getMaterial().getNome(),
-                        d.getPontoColeta().getNome(),
-                        d.getPontoColeta().getEndereco()
-                ))
+                .map(DescarteResponseDTO::new) 
                 .toList();
     }
 }

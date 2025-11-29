@@ -6,8 +6,8 @@ import jakarta.validation.constraints.Positive;
 
 public record DescarteDTO (
 
-    @NotNull(message = "O tipo de descarte é obrigatório")
-    Long pontoColeta,
+    @NotNull(message = "O Ponto de coleta é obrigatório")
+    Long pontoColetaId,
 
     @NotNull(message = "O material é obrigatório")
     Long materialId,
@@ -17,9 +17,8 @@ public record DescarteDTO (
     Double quantidade,
 
     @NotBlank(message = "A unidade de medida é obrigatória")
-    String unMedida,
+    String unidadeMedida,
 
-    @NotBlank(message = "A data do descarte é obrigatória")
     String descricao
 ) {}
 

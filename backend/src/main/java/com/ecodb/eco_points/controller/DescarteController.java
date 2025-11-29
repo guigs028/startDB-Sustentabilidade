@@ -21,19 +21,19 @@ import com.ecodb.eco_points.service.DescarteService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/descartes")
+@RequestMapping("descartes")
 public class DescarteController {
 
     @Autowired
     private DescarteService descarteService;
 
     @PostMapping
-    public ResponseEntity<Descarte> criarSolicitacaoDescarte(
+    public ResponseEntity<DescarteResponseDTO> criarSolicitacaoDescarte(
             @RequestBody @Valid DescarteDTO dto,
             @AuthenticationPrincipal UserDetails userDetails) {
         
         Descarte descarte = descarteService.criarSolicitacao(dto, userDetails.getUsername());
-        return ResponseEntity.status(HttpStatus.CREATED).body(descarte);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new DescarteResponseDTO(descarte));
     }
 
     @GetMapping("/historico")
