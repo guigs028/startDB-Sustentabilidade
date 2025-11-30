@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,13 +22,14 @@ import com.ecodb.eco_points.service.DescarteService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("descartes")
+@RequestMapping("api/v1/descartes")
 public class DescarteController {
 
     @Autowired
     private DescarteService descarteService;
 
     @PostMapping
+    @PreAuthorize("hasRole('GERADOR')")
     public ResponseEntity<DescarteResponseDTO> criarSolicitacaoDescarte(
             @RequestBody @Valid DescarteDTO dto,
             @AuthenticationPrincipal UserDetails userDetails) {
@@ -37,6 +39,7 @@ public class DescarteController {
     }
 
     @GetMapping("/historico")
+    @PreAuthorize("hasRole('GERADOR')")
     public ResponseEntity<List<DescarteResponseDTO>> listarHistorico(
             @AuthenticationPrincipal UserDetails userDetails) {
         
