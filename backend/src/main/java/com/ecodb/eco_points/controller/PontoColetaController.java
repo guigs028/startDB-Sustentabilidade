@@ -25,7 +25,7 @@ public class PontoColetaController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('GERADOR')")
+    @PreAuthorize("hasAnyRole('GERADOR', 'COLETOR')")
     public ResponseEntity<List<PontoColetaResponseDTO>> listarPontosDeColeta ( 
         @RequestParam(required = false) String nome,
         @RequestParam(required = false) Long materialId) {
