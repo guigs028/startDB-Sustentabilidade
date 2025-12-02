@@ -22,6 +22,7 @@ import com.ecodb.eco_points.model.Usuario;
 import com.ecodb.eco_points.repository.MaterialRepository;
 import com.ecodb.eco_points.repository.PontoColetaRepository;
 import com.ecodb.eco_points.repository.UsuarioRepository;
+import com.ecodb.eco_points.repository.spec.PontoColetaSpecs;
 
 @Service
 public class PontoColetaService {
@@ -67,13 +68,40 @@ public class PontoColetaService {
     }
 
     @Transactional
-    public void deletarPontoColeta(Long pontoId) {
+    public PontoColetaResponseDTO editarPontoColeta(Long pontoId, PontoColetaDTO dto) {
         Usuario usuarioLogado = obterUsuarioLogado();
 
         PontoColeta ponto = pontoColetaRepository.findById(pontoId)
                 .orElseThrow(() -> new PontoColetaNotFoundException(pontoId));
 
         // Verificar se o ponto pertence ao usuário logado
+        if (!ponto.getDono().getId().equals(usuarioLogado.getId())) {
+            throw new UnauthorizedAccessException(
+                "Você não tem permissão para editar este ponto de coleta"
+            );
+        }
+
+        // Validar e atualizar materiais
+        Set<Material> materiais = validarEObterMateriais(dto.materiaisAceitos());
+
+        // Atualizar dados do ponto
+        ponto.setNome(dto.nome());
+        ponto.setEndereco(dto.endereco());
+        ponto.setContato(dto.contato());
+        ponto.setMateriais(materiais);
+
+        PontoColeta pontoAtualizado = pontoColetaRepository.save(ponto);
+
+        return converterParaResponseDTO(pontoAtualizado);
+    }
+
+    @Transactional
+    public void deletarPontoColeta(Long pontoId) {
+        Usuario usuarioLogado = obterUsuarioLogado();
+
+        PontoColeta ponto = pontoColetaRepository.findById(pontoId)
+                .orElseThrow(() -> new PontoColetaNotFoundException(pontoId));
+
         if (!ponto.getDono().getId().equals(usuarioLogado.getId())) {
             throw new UnauthorizedAccessException(
                 "Você não tem permissão para deletar este ponto de coleta"
@@ -126,5 +154,13 @@ public class PontoColetaService {
             ponto.getDono().getEmail(),
             materiaisDTO
         );
+    }
+
+    // Método de busca pública
+    public List<PontoColetaResponseDTO> buscarPontosDeColeta(String nome, Long materialId) {
+        var pontos = pontoColetaRepository.findAll(PontoColetaSpecs.pontosColetaFiltro(nome, materialId));
+        return pontos.stream()
+                .map(this::converterParaResponseDTO)
+                .collect(Collectors.toList());
     }
 }
