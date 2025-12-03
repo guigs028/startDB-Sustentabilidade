@@ -12,14 +12,17 @@ import com.ecodb.eco_points.repository.UsuarioRepository;
 
 @Service
 public class AuthService {
-    @Autowired
-    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private PasswordEncoder passwordHasher;
 
-    @Autowired
+    private UsuarioRepository usuarioRepository;
     private JwtService jwtService;
+
+    public AuthService(UsuarioRepository usuarioRepository, JwtService jwtService) {
+        this.jwtService = jwtService;
+        this.usuarioRepository = usuarioRepository;
+    }
 
     public void registrarUsuario (RegisterDTO dto) {
         if (usuarioRepository.existsByEmail(dto.email())) {

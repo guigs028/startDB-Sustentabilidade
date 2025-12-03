@@ -1,6 +1,5 @@
 package com.ecodb.eco_points.controller.auth;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("api/v1/auth")
 public class RegisterController {
-    @Autowired
+
     private AuthService authService;
+
+    public RegisterController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody @Valid RegisterDTO registerDTO) {
