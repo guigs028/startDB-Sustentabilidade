@@ -84,7 +84,7 @@ class PontoColetaControllerTest {
             .thenReturn(pontoColetaResponse);
 
         // Act & Assert
-        mockMvc.perform(post("/pontos")
+        mockMvc.perform(post("/api/v1/pontos")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
@@ -111,7 +111,7 @@ class PontoColetaControllerTest {
         );
 
         // Act & Assert
-        mockMvc.perform(post("/pontos")
+        mockMvc.perform(post("/api/v1/pontos")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
@@ -127,7 +127,7 @@ class PontoColetaControllerTest {
             .thenReturn(Arrays.asList(pontoColetaResponse));
 
         // Act & Assert
-        mockMvc.perform(get("/pontos/meus"))
+        mockMvc.perform(get("/api/v1/pontos/meus"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$[0].id").value(1))
