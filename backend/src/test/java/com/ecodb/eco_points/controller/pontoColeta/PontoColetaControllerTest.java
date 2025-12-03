@@ -21,6 +21,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.ecodb.eco_points.controller.PontoColetaController;
 import com.ecodb.eco_points.dto.PontoColetaDTO;
 import com.ecodb.eco_points.dto.PontoColetaResponseDTO;
 import com.ecodb.eco_points.service.PontoColetaService;
