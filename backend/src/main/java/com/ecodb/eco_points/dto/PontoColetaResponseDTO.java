@@ -1,27 +1,24 @@
 package com.ecodb.eco_points.dto;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import com.ecodb.eco_points.model.Material;
-import com.ecodb.eco_points.model.PontoColeta;
 
 public record PontoColetaResponseDTO(
     Long id,
     String nome,
     String endereco,
-    List<String> materiais
+    String contato,
+    String horarios,
+    Double latitude,
+    Double longitude,
+    String donoNome,
+    String donoEmail,
+    List<MaterialResponseDTO> materiais
 ) {
-    public static PontoColetaResponseDTO fromEntity(PontoColeta pontoColeta) {
-        List<String> nomesMateriais = pontoColeta.getMateriais().stream()
-            .map(Material::getNome)
-            .collect(Collectors.toList());
-        
-            return new PontoColetaResponseDTO(
-                pontoColeta.getId(),
-                pontoColeta.getNome(), 
-                pontoColeta.getEndereco(), 
-                nomesMateriais
-            );
+    public record MaterialResponseDTO(
+        Long id,
+        String nome,
+        String categoria,
+        String destino
+    ) {
     }
 }

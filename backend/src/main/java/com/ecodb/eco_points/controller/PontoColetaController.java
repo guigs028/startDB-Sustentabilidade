@@ -3,14 +3,23 @@ package com.ecodb.eco_points.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ecodb.eco_points.dto.PontoColetaDTO;
 import com.ecodb.eco_points.dto.PontoColetaResponseDTO;
 import com.ecodb.eco_points.service.PontoColetaService;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -25,7 +34,7 @@ public class PontoColetaController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('GERADOR', 'COLETOR')")
+    @PreAuthorize("hasAnyAuthority('GERADOR', 'COLETOR')")
     public ResponseEntity<List<PontoColetaResponseDTO>> listarPontosDeColeta ( 
         @RequestParam(required = false) String nome,
         @RequestParam(required = false) Long materialId) {
@@ -33,6 +42,37 @@ public class PontoColetaController {
             List<PontoColetaResponseDTO> resultadosDaLista = pontoColetaService.buscarPontosDeColeta(nome, materialId);
 
             return ResponseEntity.ok(resultadosDaLista);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('COLETOR')")
+    public ResponseEntity<PontoColetaResponseDTO> criarPontoColeta(
+            @Valid @RequestBody PontoColetaDTO dto) {
+        PontoColetaResponseDTO response = pontoColetaService.criarPontoColeta(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/meus")
+    @PreAuthorize("hasAuthority('COLETOR')")
+    public ResponseEntity<List<PontoColetaResponseDTO>> listarMeusPontosColeta() {
+        List<PontoColetaResponseDTO> pontos = pontoColetaService.listarMeusPontosColeta();
+        return ResponseEntity.ok(pontos);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('COLETOR')")
+    public ResponseEntity<PontoColetaResponseDTO> editarPontoColeta(
+            @PathVariable Long id,
+            @Valid @RequestBody PontoColetaDTO dto) {
+        PontoColetaResponseDTO response = pontoColetaService.editarPontoColeta(id, dto);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('COLETOR')")
+    public ResponseEntity<Void> deletarPontoColeta(@PathVariable Long id) {
+        pontoColetaService.deletarPontoColeta(id);
+        return ResponseEntity.noContent().build();
     }
     
 }

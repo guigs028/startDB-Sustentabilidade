@@ -14,15 +14,15 @@ public class PontoColetaSpecs {
 
             var predicate = builder.conjunction();
 
-            // regra da filtrageem do nome (usando o Like)
+            // regra da filtragem do nome (usando o Like)
             if (StringUtils.hasText(nome)) {
-                predicate = builder.and(predicate, 
+                predicate = builder.and(predicate,
                     builder.like(
-                        builder.lower(root.get("nome")), 
+                        builder.lower(root.get("nome")),
                         "%" + nome.toLowerCase() + "%"
                     )
                 );
-            } 
+            }
 
             // regra do material id (se o id existe ele faz o join e filtra)
             if (materialId != null) {

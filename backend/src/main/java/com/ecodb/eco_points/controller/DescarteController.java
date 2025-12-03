@@ -29,7 +29,7 @@ public class DescarteController {
     private DescarteService descarteService;
 
     @PostMapping
-    @PreAuthorize("hasRole('GERADOR')")
+    @PreAuthorize("hasAuthority('GERADOR')")
     public ResponseEntity<DescarteResponseDTO> criarSolicitacaoDescarte(
             @RequestBody @Valid DescarteDTO dto,
             @AuthenticationPrincipal UserDetails userDetails) {
@@ -39,7 +39,7 @@ public class DescarteController {
     }
 
     @GetMapping("/historico")
-    @PreAuthorize("hasRole('GERADOR')")
+    @PreAuthorize("hasAuthority('GERADOR')")
     public ResponseEntity<List<DescarteResponseDTO>> listarHistorico(
             @AuthenticationPrincipal UserDetails userDetails) {
         
