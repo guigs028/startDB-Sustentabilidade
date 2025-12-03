@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,14 +26,16 @@ import com.ecodb.eco_points.repository.spec.PontoColetaSpecs;
 @Service
 public class PontoColetaService {
 
-    @Autowired
     private PontoColetaRepository pontoColetaRepository;
-
-    @Autowired
     private MaterialRepository materialRepository;
-
-    @Autowired
     private UsuarioRepository usuarioRepository;
+
+    public PontoColetaService(PontoColetaRepository pontoColetaRepository, 
+        MaterialRepository materialRepository, UsuarioRepository usuarioRepository) {
+            this.materialRepository = materialRepository;
+            this.pontoColetaRepository = pontoColetaRepository;
+            this.usuarioRepository = usuarioRepository;
+    }
 
     @Transactional
     public PontoColetaResponseDTO criarPontoColeta(PontoColetaDTO dto) {

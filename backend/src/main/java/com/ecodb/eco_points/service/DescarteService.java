@@ -18,63 +18,95 @@ import com.ecodb.eco_points.repository.DescarteRepository;
 import com.ecodb.eco_points.repository.MaterialRepository;
 import com.ecodb.eco_points.repository.PontoColetaRepository;
 import com.ecodb.eco_points.repository.UsuarioRepository;
+import com.ecodb.eco_points.repository.spec.DescarteSpecs;
 
 @Service
 public class DescarteService {
 
-    @Autowired
-    private DescarteRepository descarteRepository;
+        @Autowired
+        private DescarteRepository descarteRepository;
 
-    @Autowired
-    private PontoColetaRepository pontoColetaRepository;
+        @Autowired
+        private PontoColetaRepository pontoColetaRepository;
 
-    @Autowired
-    private MaterialRepository materialRepository;
+        @Autowired
+        private MaterialRepository materialRepository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+        @Autowired
+        private UsuarioRepository usuarioRepository;
 
-    @Transactional
-    public Descarte criarSolicitacao(DescarteDTO dto, String emailUsuario) {
-        PontoColeta pontoColeta = pontoColetaRepository.findById(dto.pontoColetaId())
-                .orElseThrow(() -> new IllegalArgumentException("Ponto de coleta não encontrado"));
+        @Transactional
+        public Descarte criarSolicitacao(DescarteDTO dto, String emailUsuario) {
+                PontoColeta pontoColeta = pontoColetaRepository.findById(dto.pontoColetaId())
+                                .orElseThrow(() -> new IllegalArgumentException("Ponto de coleta não encontrado"));
 
-        Material material = materialRepository.findById(dto.materialId())
-                .orElseThrow(() -> new IllegalArgumentException("Material não encontrado"));
+                Material material = materialRepository.findById(dto.materialId())
+                                .orElseThrow(() -> new IllegalArgumentException("Material não encontrado"));
 
-        // validar se o Ponto aceita este tipo de material
-        if (!pontoColeta.getMateriais().contains(material)) {
-            throw new IllegalArgumentException("Este ponto não aceita este tipo de material");
+                // validar se o Ponto aceita este tipo de material
+                if (!pontoColeta.getMateriais().contains(material)) {
+                        throw new IllegalArgumentException("Este ponto não aceita este tipo de material");
+                }
+
+                // recuperar usuário logado
+                Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
+                                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+
+                // criar o descarte
+                Descarte descarte = new Descarte();
+                descarte.setPontoColeta(pontoColeta);
+                descarte.setMaterial(material);
+                descarte.setUsuario(usuario);
+                descarte.setDescricaoEspecifica(dto.descricao());
+                descarte.setQuantidade(dto.quantidade());
+                descarte.setUnidadeMedida(dto.unidadeMedida());
+                descarte.setStatus(StatusDescarte.PENDENTE);
+                descarte.setDataCriacao(LocalDateTime.now());
+
+                return descarteRepository.save(descarte);
         }
 
-        //recuperar usuário logado
-        Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+        public List<DescarteResponseDTO> listarHistorico(String emailUsuario) {
+                Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
+                                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 
-        // criar o descarte
-        Descarte descarte = new Descarte();
-        descarte.setPontoColeta(pontoColeta);
-        descarte.setMaterial(material);
-        descarte.setUsuario(usuario);
-        descarte.setDescricaoEspecifica(dto.descricao());
-        descarte.setQuantidade(dto.quantidade());
-        descarte.setUnidadeMedida(dto.unidadeMedida());
-        descarte.setStatus(StatusDescarte.PENDENTE);
-        descarte.setDataCriacao(LocalDateTime.now());
+                // buscar descartes do usuário ordenados por data (mais recentes primeiro)
+                List<Descarte> descartes = descarteRepository
+                                .findByUsuarioOrderByDataCriacaoDesc(usuario);
 
-        return descarteRepository.save(descarte);
-    }
+                return descartes.stream()
+                                .map(DescarteResponseDTO::new)
+                                .toList();
+        }
 
-    public List<DescarteResponseDTO> listarHistorico(String emailUsuario) {
-        Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+        public List<DescarteResponseDTO> listarPendentesColetor(String emailDoColetor) {
+                var encontraPendentePorDono = DescarteSpecs.encontraPendentePorDono(emailDoColetor);
 
-        //buscar descartes do usuário ordenados por data (mais recentes primeiro)
-        List<Descarte> descartes = descarteRepository
-                .findByUsuarioOrderByDataCriacaoDesc(usuario);
+                List<Descarte> pendentes = descarteRepository.findAll(encontraPendentePorDono);
 
-        return descartes.stream()
-                .map(DescarteResponseDTO::new) 
-                .toList();
-    }
+                return pendentes.stream()
+                                .map(DescarteResponseDTO::new)
+                                .toList();
+        }
+
+        @Transactional
+        public void atualizaStatus(Long idDescarte, StatusDescarte novoStatus, String emailDoColetor) {
+
+                Descarte descarte = descarteRepository.findById(idDescarte)
+                                .orElseThrow(() -> new IllegalArgumentException("O descarte não foi encontrado"));
+
+                String emailDonoPontoDeColeta = descarte.getPontoColeta().getDono().getEmail();
+
+                if (!emailDonoPontoDeColeta.equals(emailDoColetor)) {
+                        throw new IllegalArgumentException("Acesso negado: Este descarte não pertence aos seus pontos de coleta.");
+                }
+
+                if (descarte.getStatus() != StatusDescarte.PENDENTE) {
+                        throw new IllegalArgumentException("Não é possível alterar um descarte que já foi finalizado (Concluído ou Cancelado).");
+                }
+
+                descarte.setStatus(novoStatus);
+                descarteRepository.save(descarte);
+        }
+
 }
