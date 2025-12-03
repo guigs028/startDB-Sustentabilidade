@@ -3,12 +3,14 @@ package com.ecodb.eco_points.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ecodb.eco_points.dto.DescarteDTO;
 import com.ecodb.eco_points.dto.DescarteResponseDTO;
+import com.ecodb.eco_points.exception.DescarteNotFoundException;
+import com.ecodb.eco_points.exception.UnauthorizedAccessException;
+import com.ecodb.eco_points.exception.UsuarioNotFoundException;
 import com.ecodb.eco_points.model.Descarte;
 import com.ecodb.eco_points.model.Material;
 import com.ecodb.eco_points.model.PontoColeta;
@@ -23,17 +25,18 @@ import com.ecodb.eco_points.repository.spec.DescarteSpecs;
 @Service
 public class DescarteService {
 
-        @Autowired
         private DescarteRepository descarteRepository;
-
-        @Autowired
         private PontoColetaRepository pontoColetaRepository;
-
-        @Autowired
         private MaterialRepository materialRepository;
-
-        @Autowired
         private UsuarioRepository usuarioRepository;
+
+        public DescarteService(DescarteRepository descarteRepository, PontoColetaRepository pontoColetaRepository, 
+                MaterialRepository materialRepository, UsuarioRepository usuarioRepository) {
+                this.descarteRepository = descarteRepository;
+                this.pontoColetaRepository = pontoColetaRepository;
+                this.materialRepository = materialRepository;
+                this.usuarioRepository = usuarioRepository;
+        }
 
         @Transactional
         public Descarte criarSolicitacao(DescarteDTO dto, String emailUsuario) {
@@ -50,7 +53,7 @@ public class DescarteService {
 
                 // recuperar usuário logado
                 Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
-                                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+                                .orElseThrow(() -> new UsuarioNotFoundException(emailUsuario));
 
                 // criar o descarte
                 Descarte descarte = new Descarte();
@@ -93,12 +96,12 @@ public class DescarteService {
         public void atualizaStatus(Long idDescarte, StatusDescarte novoStatus, String emailDoColetor) {
 
                 Descarte descarte = descarteRepository.findById(idDescarte)
-                                .orElseThrow(() -> new IllegalArgumentException("O descarte não foi encontrado"));
+                                .orElseThrow(() -> new DescarteNotFoundException(idDescarte));
 
                 String emailDonoPontoDeColeta = descarte.getPontoColeta().getDono().getEmail();
 
                 if (!emailDonoPontoDeColeta.equals(emailDoColetor)) {
-                        throw new IllegalArgumentException("Acesso negado: Este descarte não pertence aos seus pontos de coleta.");
+                        throw new UnauthorizedAccessException("Acesso negado: Este descarte não pertence aos seus pontos de coleta.");
                 }
 
                 if (descarte.getStatus() != StatusDescarte.PENDENTE) {
