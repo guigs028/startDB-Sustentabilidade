@@ -35,6 +35,8 @@ public class AuthService {
         novoUsuario.setNome(dto.nome());
         novoUsuario.setEmail(dto.email());
         novoUsuario.setSenha(senhaHasheada);
+        novoUsuario.setTelefone(dto.telefone());
+        novoUsuario.setEndereco(dto.endereco());
         novoUsuario.setRole(dto.tipo());
 
         usuarioRepository.save(novoUsuario);

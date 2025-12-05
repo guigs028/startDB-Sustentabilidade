@@ -20,5 +20,13 @@ public record RegisterDTO (
     String senha,
 
     @NotNull(message = "O tipo de usuário é obrigatório")
-    TipoUsuario tipo
+    TipoUsuario tipo,
+
+    @NotBlank(message = "O telefone é obrigatório")
+    @Size(max = 15, message = "O telefone deve ter no máximo 15 caracteres")
+    String telefone,
+
+    @NotBlank(message = "O endereço é obrigatório")
+    @Size(max = 200, message = "O endereço deve ter no máximo 200 caracteres")
+    String endereco
 ) {}

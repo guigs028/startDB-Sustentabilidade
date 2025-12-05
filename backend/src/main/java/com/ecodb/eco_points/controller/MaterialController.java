@@ -11,7 +11,7 @@ import com.ecodb.eco_points.dto.MaterialDTO;
 import com.ecodb.eco_points.service.MaterialService;
 
 @RestController
-@RequestMapping("api/v1/materials")
+@RequestMapping("api/v1/materiais")
 public class MaterialController {
 
     private MaterialService materialService;

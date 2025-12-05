@@ -35,6 +35,10 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "tipo")
     private TipoUsuario role;
-    
-    
+
+    @Column(length = 15)
+    private String telefone;    
+
+    @Column(length = 200)
+    private String endereco;
 }

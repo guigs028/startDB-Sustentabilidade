@@ -75,12 +75,16 @@ public class DatabaseSeeder implements CommandLineRunner {
         joao.setNome("Joao Gerador");
         joao.setEmail("gerador@teste.com");
         joao.setSenha(senhaHasheada);
+        joao.setTelefone("11987654321");
+        joao.setEndereco("Rua das Flores, 123 - São Paulo");
         joao.setRole(TipoUsuario.GERADOR);
         
         Usuario maria = new Usuario();
         maria.setNome("Maria Coletora");
         maria.setEmail("coletor@teste.com");
         maria.setSenha(senhaHasheada);
+        maria.setTelefone("11976543210");
+        maria.setEndereco("Av. Paulista, 500 - São Paulo");
         maria.setRole(TipoUsuario.COLETOR);
 
         usuarioRepository.saveAll(Arrays.asList(joao, maria));
