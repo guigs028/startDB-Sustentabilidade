@@ -25,7 +25,7 @@ public record DescarteResponseDTO(
             descarte.getId(),
             descarte.getDescricaoEspecifica(),
             descarte.getQuantidade(),
-            descarte.getUnidadeMedida(),
+            descarte.getUnidadeMedida().getAbreviacao(),
             descarte.getStatus(),
             descarte.getDataCriacao(),
             descarte.getMaterial().getNome(),

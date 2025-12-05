@@ -2,6 +2,7 @@ package com.ecodb.eco_points.model;
 
 import com.ecodb.eco_points.model.enums.CategoriaMaterial;
 import com.ecodb.eco_points.model.enums.DestinoMaterial;
+import com.ecodb.eco_points.model.enums.UnidadeMedida;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,5 +35,9 @@ public class Material {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DestinoMaterial destino;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UnidadeMedida unidadePadrao;
     
 }

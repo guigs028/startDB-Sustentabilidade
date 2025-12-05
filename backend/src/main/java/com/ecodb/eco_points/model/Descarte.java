@@ -3,6 +3,7 @@ package com.ecodb.eco_points.model;
 import java.time.LocalDateTime;
 
 import com.ecodb.eco_points.model.enums.StatusDescarte;
+import com.ecodb.eco_points.model.enums.UnidadeMedida;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,8 +33,9 @@ public class Descarte {
     @Column(nullable = false)
     private double quantidade;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String unidadeMedida = "KG";
+    private UnidadeMedida unidadeMedida;
 
     @Enumerated(EnumType.STRING)
     private StatusDescarte status = StatusDescarte.PENDENTE;

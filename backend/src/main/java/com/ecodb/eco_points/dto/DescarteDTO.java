@@ -16,9 +16,6 @@ public record DescarteDTO (
     @Positive(message = "A quantidade deve ser um valor positivo")
     Double quantidade,
 
-    @NotBlank(message = "A unidade de medida é obrigatória")
-    String unidadeMedida,
-
     String descricao
 ) {}
 
