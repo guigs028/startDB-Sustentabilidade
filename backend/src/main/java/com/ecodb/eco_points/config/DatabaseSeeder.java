@@ -19,6 +19,7 @@ import com.ecodb.eco_points.model.enums.CategoriaMaterial;
 import com.ecodb.eco_points.model.enums.DestinoMaterial;
 import com.ecodb.eco_points.model.enums.StatusDescarte;
 import com.ecodb.eco_points.model.enums.TipoUsuario;
+import com.ecodb.eco_points.model.enums.UnidadeMedida;
 import com.ecodb.eco_points.repository.DescarteRepository;
 import com.ecodb.eco_points.repository.MaterialRepository;
 import com.ecodb.eco_points.repository.PontoColetaRepository;
@@ -54,16 +55,16 @@ public class DatabaseSeeder implements CommandLineRunner {
         System.out.println("Iniciando o seeder");
 
         List<Material> materiais = Arrays.asList(
-            criarMaterial("Garrafa PET", CategoriaMaterial.PLASTICO, DestinoMaterial.RECICLAGEM),
-            criarMaterial("Caixa de Papelao", CategoriaMaterial.PAPEL, DestinoMaterial.RECICLAGEM),
-            criarMaterial("Lata de refrigerante", CategoriaMaterial.METAL, DestinoMaterial.RECICLAGEM),
-            criarMaterial("Garrafa de Vidro", CategoriaMaterial.VIDRO, DestinoMaterial.RECICLAGEM),
-            criarMaterial("Casca de Fruta/Legume", CategoriaMaterial.ORGANICO, DestinoMaterial.COMPOSTAGEM),
-            criarMaterial("resto de Comida", CategoriaMaterial.ORGANICO, DestinoMaterial.COMPOSTAGEM),
-            criarMaterial("oleo de Cozinha Usado", CategoriaMaterial.OLEO, DestinoMaterial.DESCARTE_ESPECIAL),
-            criarMaterial("Pilhas e Baterias", CategoriaMaterial.ELETRONICO, DestinoMaterial.DESCARTE_ESPECIAL),
-            criarMaterial("Celular Quebrado", CategoriaMaterial.ELETRONICO, DestinoMaterial.REUSO),
-            criarMaterial("pote de Vidro (Conserva)", CategoriaMaterial.VIDRO, DestinoMaterial.REUSO)
+            criarMaterial("Garrafa PET", CategoriaMaterial.PLASTICO, DestinoMaterial.RECICLAGEM, UnidadeMedida.UNIDADE),
+            criarMaterial("Caixa de Papelao", CategoriaMaterial.PAPEL, DestinoMaterial.RECICLAGEM, UnidadeMedida.KILOGRAMA),
+            criarMaterial("Lata de refrigerante", CategoriaMaterial.METAL, DestinoMaterial.RECICLAGEM, UnidadeMedida.UNIDADE),
+            criarMaterial("Garrafa de Vidro", CategoriaMaterial.VIDRO, DestinoMaterial.RECICLAGEM, UnidadeMedida.KILOGRAMA),
+            criarMaterial("Casca de Fruta/Legume", CategoriaMaterial.ORGANICO, DestinoMaterial.COMPOSTAGEM, UnidadeMedida.KILOGRAMA),
+            criarMaterial("resto de Comida", CategoriaMaterial.ORGANICO, DestinoMaterial.COMPOSTAGEM, UnidadeMedida.KILOGRAMA),
+            criarMaterial("oleo de Cozinha Usado", CategoriaMaterial.OLEO, DestinoMaterial.DESCARTE_ESPECIAL, UnidadeMedida.LITRO),
+            criarMaterial("Pilhas e Baterias", CategoriaMaterial.ELETRONICO, DestinoMaterial.DESCARTE_ESPECIAL, UnidadeMedida.UNIDADE),
+            criarMaterial("Celular Quebrado", CategoriaMaterial.ELETRONICO, DestinoMaterial.REUSO, UnidadeMedida.UNIDADE),
+            criarMaterial("pote de Vidro (Conserva)", CategoriaMaterial.VIDRO, DestinoMaterial.REUSO, UnidadeMedida.UNIDADE)
         );
         materialRepository.saveAll(materiais);
         System.out.println("Materiais criados.");
@@ -111,35 +112,38 @@ public class DatabaseSeeder implements CommandLineRunner {
         System.out.println("Ponto de Coleta criado.");
 
         // CRIAR DESCARTES
+        Material materialPet = encontrarMaterial(materiais, "Garrafa PET");
         Descarte descarte1 = new Descarte();
         descarte1.setDescricaoEspecifica("3 sacolas de garrafas");
-        descarte1.setQuantidade(2.5);
-        descarte1.setUnidadeMedida("KG");
+        descarte1.setQuantidade(15.0);
+        descarte1.setUnidadeMedida(materialPet.getUnidadePadrao()); // UNIDADE
         descarte1.setStatus(StatusDescarte.PENDENTE);
         descarte1.setUsuario(joao);
         descarte1.setPontoColeta(ecoponto);
-        descarte1.setMaterial(encontrarMaterial(materiais, "Garrafa PET"));
+        descarte1.setMaterial(materialPet);
         descarte1.setDataCriacao(LocalDateTime.now().minusDays(1));
 
+        Material materialPilhas = encontrarMaterial(materiais, "Pilhas e Baterias");
         Descarte descarte2 = new Descarte();
         descarte2.setDescricaoEspecifica("Pilha velha de controle");
         descarte2.setQuantidade(4.0);
-        descarte2.setUnidadeMedida("UNIDADE");
+        descarte2.setUnidadeMedida(materialPilhas.getUnidadePadrao()); // UNIDADE
         descarte2.setStatus(StatusDescarte.CONCLUIDO);
         descarte2.setUsuario(joao);
         descarte2.setPontoColeta(ecoponto);
-        descarte2.setMaterial(encontrarMaterial(materiais, "Pilhas e Baterias"));
+        descarte2.setMaterial(materialPilhas);
         descarte2.setDataCriacao(LocalDateTime.now().minusDays(5));
 
         descarteRepository.saveAll(Arrays.asList(descarte1, descarte2));
         System.out.println("Descartes criados.");
     }
     
-    private Material criarMaterial(String nome, CategoriaMaterial categoriaMaterial, DestinoMaterial destinoMaterial) {
+    private Material criarMaterial(String nome, CategoriaMaterial categoriaMaterial, DestinoMaterial destinoMaterial, UnidadeMedida unidadePadrao) {
         Material material = new Material();
         material.setNome(nome);
         material.setCategoria(categoriaMaterial);
         material.setDestino(destinoMaterial);
+        material.setUnidadePadrao(unidadePadrao);
         return material;
     }
 

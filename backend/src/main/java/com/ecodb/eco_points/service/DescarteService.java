@@ -62,7 +62,7 @@ public class DescarteService {
                 descarte.setUsuario(usuario);
                 descarte.setDescricaoEspecifica(dto.descricao());
                 descarte.setQuantidade(dto.quantidade());
-                descarte.setUnidadeMedida(dto.unidadeMedida());
+                descarte.setUnidadeMedida(material.getUnidadePadrao()); // Usa unidade padrão do material
                 descarte.setStatus(StatusDescarte.PENDENTE);
                 descarte.setDataCriacao(LocalDateTime.now());
 
