@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Home from './pages/Home';
+import HomeGerador from './pages/HomeGerador';
 
 // exemplo pra proxima tela apos login/cadastro
 const Dashboard = () => <div className="p-10 text-2xl">Bem-vindo ao Dashboard (area do Coletor/Gerador)</div>;
@@ -22,6 +23,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Dashboard />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/gerador" 
+            element={
+              <PrivateRoute>
+                <HomeGerador />
               </PrivateRoute>
             } 
           />

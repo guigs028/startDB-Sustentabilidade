@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Input from "../ui/Input";
+import { getUserRole, getRedirectPathByRole } from "../../utils/jwtUtils";
 
 export default function AuthSection() {
   const [isLogin, setIsLogin] = useState(true);
@@ -28,7 +29,11 @@ export default function AuthSection() {
     if (isLogin) {
       const result = await login(formData.email, formData.senha);
       if (result.success) {
-        navigate("/dashboard");
+        // Pegar o token do localStorage
+        const token = localStorage.getItem('token');
+        const role = getUserRole(token);
+        const redirectPath = getRedirectPathByRole(role);
+        navigate(redirectPath);
       } else {
         setError("Credenciais inválidas.");
       }
