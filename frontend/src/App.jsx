@@ -1,9 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Home from './pages/Home';
-
-// exemplo pra proxima tela apos login/cadastro
-const Dashboard = () => <div className="p-10 text-2xl">Bem-vindo ao Dashboard (area do Coletor/Gerador)</div>;
+import ColetorDashboard from './pages/ColetorDashboard';
 
 // Rota Privada Wrapper
 function PrivateRoute({ children }) {
@@ -21,7 +19,15 @@ function App() {
             path="/dashboard" 
             element={
               <PrivateRoute>
-                <Dashboard />
+                <CollectorDashboard />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/coletor/dashboard" 
+            element={
+              <PrivateRoute>
+                <CollectorDashboard />
               </PrivateRoute>
             } 
           />

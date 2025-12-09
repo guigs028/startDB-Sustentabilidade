@@ -28,7 +28,13 @@ export default function AuthSection() {
     if (isLogin) {
       const result = await login(formData.email, formData.senha);
       if (result.success) {
-        navigate("/dashboard");
+        // Redirect based on user type stored in JWT token
+        const userType = result.user?.tipo;
+        if (userType === "COLETOR") {
+          navigate("/coletor/dashboard");
+        } else {
+          navigate("/dashboard"); // Default for GERADOR
+        }
       } else {
         setError("Credenciais inválidas.");
       }
