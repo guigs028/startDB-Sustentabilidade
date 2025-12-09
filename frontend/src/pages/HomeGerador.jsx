@@ -19,15 +19,22 @@ export default function HomeGerador() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [pontosRes, descartesRes, materiaisRes] = await Promise.all([
+      const [pontosRes, descartesRes, materiaisRes] = await Promise.allSettled([
         api.get('/pontos-coleta'),
         api.get('/descartes/historico'),
         api.get('/materials')
       ]);
       
-      setPontos(pontosRes.data);
-      setDescartes(descartesRes.data);
-      setMateriais(materiaisRes.data);
+      if (pontosRes.status === 'fulfilled') {
+        setPontos(pontosRes.value.data);
+      }
+      if (descartesRes.status === 'fulfilled') {
+        setDescartes(descartesRes.value.data);
+        console.log('Descartes carregados:', descartesRes.value.data);
+      }
+      if (materiaisRes.status === 'fulfilled') {
+        setMateriais(materiaisRes.value.data);
+      }
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
     } finally {
@@ -190,6 +197,7 @@ export default function HomeGerador() {
               </div>
 
               <div className="space-y-3">
+                {console.log('Renderizando descartes, quantidade:', descartes.length)}
                 {descartes.length === 0 ? (
                   <p className="text-gray-500 text-sm text-center py-8">
                     Nenhum descarte registrado
@@ -211,7 +219,7 @@ export default function HomeGerador() {
                       </div>
                       
                       <p className="text-gray-600 text-xs mb-1">
-                        {descarte.quantidade} {descarte.unidadeMedida}
+                        {descarte.quantidade} {descarte.unidadeMedida?.toLowerCase() || descarte.unidadeMedida}
                       </p>
                       
                       <p className="text-gray-500 text-xs">
