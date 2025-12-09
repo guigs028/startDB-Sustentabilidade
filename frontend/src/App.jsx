@@ -19,7 +19,7 @@ function App() {
             path="/dashboard" 
             element={
               <PrivateRoute>
-                <CollectorDashboard />
+                <ColetorDashboard />
               </PrivateRoute>
             } 
           />
@@ -27,7 +27,7 @@ function App() {
             path="/coletor/dashboard" 
             element={
               <PrivateRoute>
-                <CollectorDashboard />
+                <ColetorDashboard />
               </PrivateRoute>
             } 
           />
