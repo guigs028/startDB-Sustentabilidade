@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { Leaf, Search, User, LogOut, Plus } from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
 import api from '../services/api';
 
 export default function HomeGerador() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
   const [pontos, setPontos] = useState([]);
   const [descartes, setDescartes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,7 +21,7 @@ export default function HomeGerador() {
       setLoading(true);
       const [pontosRes, descartesRes, materiaisRes] = await Promise.all([
         api.get('/pontos-coleta'),
-        api.get('/descartes/usuario'),
+        api.get('/descartes/historico'),
         api.get('/materials')
       ]);
       
@@ -35,11 +33,6 @@ export default function HomeGerador() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
   };
 
   const filteredPontos = pontos.filter(ponto => {
@@ -72,43 +65,7 @@ export default function HomeGerador() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navbar */}
-      <nav className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-2">
-              <Leaf className="w-6 h-6 text-green-600" />
-              <span className="text-xl font-bold text-gray-900">EcoResiduos</span>
-            </div>
-            
-            <div className="flex items-center gap-6">
-              <a href="#pontos" className="text-gray-600 hover:text-gray-900 font-medium">
-                Buscar Pontos
-              </a>
-              <a href="#descartes" className="text-gray-600 hover:text-gray-900 font-medium">
-                Meus Descartes
-              </a>
-              <button
-                onClick={() => navigate('/profile')}
-                className="text-gray-600 hover:text-gray-900 font-medium"
-              >
-                Perfil
-              </button>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 text-red-600 hover:text-red-700"
-              >
-                <LogOut className="w-4 h-4" />
-                Sair
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Conteúdo Principal */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Coluna Esquerda - Buscar Pontos */}
@@ -281,6 +238,5 @@ export default function HomeGerador() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
