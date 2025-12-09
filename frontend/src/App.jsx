@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import HomeGerador from './pages/HomeGerador';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
+import Layout from './components/Layout';
 
 // exemplo pra proxima tela apos login/cadastro
 const Dashboard = () => <div className="p-10 text-2xl">Bem-vindo ao Dashboard (area do Coletor/Gerador)</div>;
@@ -32,7 +33,9 @@ function App() {
             path="/gerador" 
             element={
               <PrivateRoute>
-                <HomeGerador />
+                <Layout>
+                  <HomeGerador />
+                </Layout>
               </PrivateRoute>
             } 
           />
@@ -40,7 +43,9 @@ function App() {
             path="/profile" 
             element={
               <PrivateRoute>
-                <Profile />
+                <Layout>
+                  <Profile />
+                </Layout>
               </PrivateRoute>
             } 
           />
@@ -48,7 +53,9 @@ function App() {
             path="/profile/edit" 
             element={
               <PrivateRoute>
-                <EditProfile />
+                <Layout>
+                  <EditProfile />
+                </Layout>
               </PrivateRoute>
             } 
           />
