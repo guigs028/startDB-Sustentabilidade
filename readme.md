@@ -8,16 +8,37 @@
 ![React](https://img.shields.io/badge/React-18-blue)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue)
 
+
+Links (remover dps)
+
 http://localhost:8080/api/status
 
 http://localhost:8080/swagger-ui/index.html
 
-# Titulo
 
-## Objetivo /Sobre
+# EcoPoints — Sistema de Gestão de Resíduos
+**Descarte Consciente, Impacto Real.**
 
-## Telas da Aplicação
-Video / Imagem da aplicação rodando aqui? 
+
+> Plataforma colaborativa que conecta **geradores de resíduos** a **coletores certificados**, facilitando reciclagem, doação, compostagem e descarte responsável.
+
+## O Problema que Resolvemos
+
+Todos os dias famílias e pequenas empresas geram toneladas de resíduos que poderiam ser reciclados ou reaproveitados, mas acabam no lixo comum por dois motivos principais:
+
+1. **Falta de informação** – “A caixa de pizza é reciclável?”  
+2. **Dificuldade logística** – “Onde descarto óleo de cozinha / eletrônicos / pilhas perto de mim?”
+
+## Solução
+Uma plataforma simples e colaborativa onde:
+
+- **Geradores** encontram rapidamente o ponto de coleta mais próximo para cada tipo de material  
+- **Coletores** (ONGs, cooperativas, empresas) divulgam seus pontos e especificam exatamente o que aceitam  
+- Todo descarte é registrado e acompanhado, gerando impacto mensurável
+
+
+## Telas da Aplicação (futuro)
+Video / Imagem da aplicação rodando aqui
 <!---
 | Área do Gerador (Busca) | Dashboard do Coletor |
 |:---:|:---:|
@@ -28,13 +49,53 @@ Video / Imagem da aplicação rodando aqui?
 
 
 ## Funcionalidades principais
+### Gerador
+- Busca por material (“Onde descarto pilhas?”)
+- Visualização em mapa ou lista
+- Guia de preparação do resíduo
+- Registro e histórico de descartes com status
 
-## Tecnologias
+### Coletor
+- Cadastro ilimitado de pontos de coleta
+- Seleção precisa dos materiais aceitos
+- Dashboard com todos os pontos
+- Lista de descartes pendentes → Concluir ou Negar
 
-## Como executar o projeto
 
-## Documentação (WIKI / Api / Telas? )
+## 🛠 Tecnologias
 
+| Camada         | Tecnologia                     |
+|----------------|--------------------------------|
+| Backend        | Java 17 + Spring Boot 3.4      |
+| Frontend       | React 18 + Vite + Javascripy   |
+| Banco de dados | PostgreSQL 15                  |
+| API Docs       | SpringDoc OpenAPI (Swagger)    |
+| CI/CD          | GitHub Actions                 |
+
+## Como Rodar o Projeto Localmente
+### Pré-requisitos
+- Java 17
+- Node.js 18+
+- PostgreSQL 15
+- Maven
+
+### Passo a passo
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/guigs028/startDB-Sustentabilidade.git
+cd startDB-Sustentabilidade
+
+# 2. Backend (Spring Boot)
+cd backend
+./mvnw spring-boot:run
+
+# 3. Frontend (React)
+cd ../frontend
+npm install
+npm run dev
+```
+#### Documentação na WIKI - https://github.com/guigs028/startDB-Sustentabilidade/wiki
 
 ## Contribuição
 
