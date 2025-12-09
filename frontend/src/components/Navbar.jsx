@@ -37,8 +37,12 @@ export default function Navbar() {
               Buscar Pontos
             </button>
             <button
-              onClick={() => navigate('/gerador#descartes')}
-              className="text-gray-600 hover:text-gray-900 font-medium"
+              onClick={() => navigate('/descartes')}
+              className={`font-medium ${
+                isActive('/descartes')
+                  ? 'text-green-600' 
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
             >
               Meus Descartes
             </button>
