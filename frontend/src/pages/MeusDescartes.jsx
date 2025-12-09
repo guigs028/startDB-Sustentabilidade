@@ -139,6 +139,11 @@ export default function MeusDescartes() {
 
                     {/* Informações */}
                     <div className="space-y-1 text-gray-600">
+                      {descarte.material?.categoria && (
+                        <p className="text-sm">
+                          <span className="font-medium">Categoria:</span> {descarte.material.categoria}
+                        </p>
+                      )}
                       <p className="text-sm">
                         <span className="font-medium">Quantidade:</span> {descarte.quantidade} {descarte.unidadeMedida?.toLowerCase()}
                       </p>

@@ -20,7 +20,7 @@ export default function HomeGerador() {
     try {
       setLoading(true);
       const [pontosRes, descartesRes, materiaisRes] = await Promise.allSettled([
-        api.get('/pontos-coleta'),
+        api.get('/pontos'),
         api.get('/descartes/historico'),
         api.get('/materials')
       ]);
@@ -30,7 +30,6 @@ export default function HomeGerador() {
       }
       if (descartesRes.status === 'fulfilled') {
         setDescartes(descartesRes.value.data);
-        console.log('Descartes carregados:', descartesRes.value.data);
       }
       if (materiaisRes.status === 'fulfilled') {
         setMateriais(materiaisRes.value.data);
@@ -197,7 +196,6 @@ export default function HomeGerador() {
               </div>
 
               <div className="space-y-3">
-                {console.log('Renderizando descartes, quantidade:', descartes.length)}
                 {descartes.length === 0 ? (
                   <p className="text-gray-500 text-sm text-center py-8">
                     Nenhum descarte registrado
