@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Trash2, Plus } from 'lucide-react';
+import { Trash2, Calendar, Clock, CheckCircle, XCircle, MapPin } from 'lucide-react';
 
 export default function MeusDescartes() {
   const [descartes, setDescartes] = useState([]);
@@ -24,159 +24,122 @@ export default function MeusDescartes() {
   };
 
   const handleCancelar = async (id) => {
-    if (!confirm('Deseja realmente cancelar este descarte?')) return;
+    if (!window.confirm('Deseja realmente cancelar este descarte?')) return;
     
     try {
+      // Nota: Certifique-se que o backend suporta DELETE neste endpoint
       await api.delete(`/descartes/${id}`);
       loadDescartes();
     } catch (error) {
-      console.error('Erro ao cancelar descarte:', error);
-      alert('Erro ao cancelar descarte');
+      alert('Erro ao cancelar descarte.');
     }
-  };
-
-  const getStatusBadge = (status) => {
-    const badges = {
-      'APROVADO': { color: 'bg-green-100 text-green-700', icon: '✓', label: 'Aprovado' },
-      'PENDENTE': { color: 'bg-yellow-100 text-yellow-700', icon: '⏱', label: 'Pendente' },
-      'NEGADO': { color: 'bg-red-100 text-red-700', icon: '✕', label: 'Negado' },
-      'CONCLUIDO': { color: 'bg-blue-100 text-blue-700', icon: '✓', label: 'Concluído' },
-      'CANCELADO': { color: 'bg-gray-100 text-gray-700', icon: '✕', label: 'Cancelado' }
-    };
-    return badges[status] || badges['PENDENTE'];
   };
 
   const filteredDescartes = filterStatus === 'TODOS' 
     ? descartes 
     : descartes.filter(d => d.status === filterStatus);
 
-  if (loading) {
+  // Componente Badge atualizado conforme imagem
+  const StatusBadge = ({ status }) => {
+    const styles = {
+      'APROVADO': { bg: 'bg-green-100', text: 'text-green-800', icon: <CheckCircle className="w-3 h-3" />, label: 'Aprovado' },
+      'PENDENTE': { bg: 'bg-[#FEF9C3]', text: 'text-yellow-800', icon: <Clock className="w-3 h-3" />, label: 'Pendente' },
+      'NEGADO': { bg: 'bg-red-100', text: 'text-red-800', icon: <XCircle className="w-3 h-3" />, label: 'Negado' },
+      'CONCLUIDO': { bg: 'bg-blue-100', text: 'text-blue-800', icon: <CheckCircle className="w-3 h-3" />, label: 'Concluído' },
+    };
+    
+    const config = styles[status] || styles['PENDENTE'];
+
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-xl text-gray-600">Carregando...</div>
-      </div>
+      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${config.bg} ${config.text}`}>
+        {config.icon} {config.label}
+      </span>
     );
-  }
+  };
+
+  if (loading) return <div className="py-12 text-center text-gray-500">Carregando...</div>;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-5xl mx-auto px-4 py-8 bg-gray-50 min-h-screen">
       {/* Cabeçalho */}
-      <div className="mb-8 flex justify-between items-start">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Meus Descartes</h1>
-          <p className="text-gray-600">Acompanhe o status de todos os seus registros de descarte</p>
-        </div>
-        
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Meus Descartes</h1>
+        <p className="text-gray-500">Acompanhe o status de todos os seus registros de descarte</p>
       </div>
 
-      {/* Filtros por Status */}
-      <div className="mb-6 flex gap-2 flex-wrap">
-        <button
-          onClick={() => setFilterStatus('TODOS')}
-          className={`px-4 py-2 rounded-lg font-medium transition ${
-            filterStatus === 'TODOS'
-              ? 'bg-green-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          Todos
-        </button>
-        <button
-          onClick={() => setFilterStatus('PENDENTE')}
-          className={`px-4 py-2 rounded-lg font-medium transition ${
-            filterStatus === 'PENDENTE'
-              ? 'bg-green-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          Pendente
-        </button>
-        <button
-          onClick={() => setFilterStatus('APROVADO')}
-          className={`px-4 py-2 rounded-lg font-medium transition ${
-            filterStatus === 'APROVADO'
-              ? 'bg-green-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          Aprovado
-        </button>
-        <button
-          onClick={() => setFilterStatus('NEGADO')}
-          className={`px-4 py-2 rounded-lg font-medium transition ${
-            filterStatus === 'NEGADO'
-              ? 'bg-green-600 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          Negado
-        </button>
+      {/* Tabs de Filtro - Estilo da Imagem */}
+      <div className="flex gap-2 mb-8 flex-wrap">
+        {[
+            { id: 'TODOS', label: 'Todos' },
+            { id: 'PENDENTE', label: 'Pendente' },
+            { id: 'APROVADO', label: 'Aprovado' },
+            { id: 'NEGADO', label: 'Negado' }
+        ].map((tab) => (
+            <button
+                key={tab.id}
+                onClick={() => setFilterStatus(tab.id)}
+                className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${
+                    filterStatus === tab.id
+                    ? 'bg-[#00684A] text-white shadow-md' // Verde escuro ativo
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300' // Cinza inativo
+                }`}
+            >
+                {tab.label}
+            </button>
+        ))}
       </div>
 
-      {/* Lista de Descartes */}
+      {/* Lista de Cards */}
       <div className="space-y-4">
         {filteredDescartes.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <p className="text-gray-500">Nenhum descarte encontrado</p>
+          <div className="text-center py-12 bg-white rounded-lg border border-dashed border-gray-200">
+            <p className="text-gray-500">Nenhum descarte encontrado.</p>
           </div>
         ) : (
-          filteredDescartes.map((descarte) => {
-            const badge = getStatusBadge(descarte.status);
-            return (
-              <div
-                key={descarte.id}
-                className="bg-white rounded-lg shadow p-6 hover:shadow-md transition"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    {/* Material e Status */}
-                    <div className="flex items-center gap-3 mb-3">
-                      <h3 className="text-xl font-bold text-gray-900">
-                        {descarte.material?.nome || 'Material'} {/* Buscar nome dos materiais */}
-                      </h3>
-                      <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${badge.color}`}>
-                        <span>{badge.icon}</span>
-                        {badge.label}
-                      </span>
-                    </div>
-
-                    {/* Informações */}
-                    <div className="space-y-1 text-gray-600">
-                      {descarte.material?.categoria && (
-                        <p className="text-sm">
-                          <span className="font-medium">Categoria:</span> {descarte.material.categoria}
-                        </p>
-                      )}
-                      <p className="text-sm">
-                        <span className="font-medium">Quantidade:</span> {descarte.quantidade} {descarte.unidadeMedida?.toLowerCase()}
-                      </p>
-                      <p className="text-sm">
-                        <span className="font-medium">Ponto:</span> {descarte.pontoColeta?.nome || 'Ponto de Coleta'}
-                      </p>
-                      <p className="text-sm text-gray-400">
-                        📅 {new Date(descarte.dataCriacao).toLocaleDateString('pt-BR', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric'
-                        })}
-                      </p>
-                    </div>
+          filteredDescartes.map((descarte) => (
+            <div
+              key={descarte.id}
+              className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                
+                {/* Lado Esquerdo: Informações */}
+                <div className="flex-1 space-y-3">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    {/* NOME DO MATERIAL (Vindo do DTO) */}
+                    <h3 className="text-xl font-bold text-gray-900">
+                      {descarte.materialNome || 'Material'} 
+                    </h3>
+                    <StatusBadge status={descarte.status} />
                   </div>
 
-                  {/* Botão Cancelar (apenas para PENDENTE) */}
-                  {descarte.status === 'PENDENTE' && (
-                    <button
-                      onClick={() => handleCancelar(descarte.id)}
-                      className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Cancelar
-                    </button>
-                  )}
+                  <div className="space-y-1 text-sm text-gray-600">
+                    <p>
+                      <span className="font-semibold text-gray-900">Quantidade:</span> {descarte.quantidade} {descarte.unidadeMedida?.toLowerCase() || 'un'}
+                    </p>
+                    <p className="flex items-center gap-1">
+                      <span className="font-semibold text-gray-900">Ponto:</span> {descarte.pontoColetaNome || 'Ponto de Coleta'}
+                    </p>
+                    <p className="flex items-center gap-1 text-gray-400 text-xs pt-1">
+                       <Calendar className="w-3 h-3" />
+                       {new Date(descarte.dataCriacao).toLocaleDateString('pt-BR')}
+                    </p>
+                  </div>
                 </div>
+
+                {/* Lado Direito: Ações */}
+                {descarte.status === 'PENDENTE' && (
+                  <button
+                    onClick={() => handleCancelar(descarte.id)}
+                    className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition text-sm font-medium self-start sm:self-center ml-auto sm:ml-0"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Cancelar
+                  </button>
+                )}
               </div>
-            );
-          })
+            </div>
+          ))
         )}
       </div>
     </div>

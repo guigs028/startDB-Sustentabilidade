@@ -21,7 +21,8 @@ public class MaterialService {
             .map(material -> new MaterialDTO(
                 material.getId(),
                 material.getNome(),
-                material.getCategoria(), null
+                material.getCategoria(),
+                material.getDestino()
             ))
             .toList();
     }
