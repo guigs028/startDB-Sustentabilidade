@@ -10,7 +10,6 @@ export default function HomeGerador() {
   const [meusMateriais, setMeusMateriais] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMaterial, setSelectedMaterial] = useState('');
-  const [materiais, setMateriais] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,10 +19,9 @@ export default function HomeGerador() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [pontosRes, descartesRes, materiaisRes, meusMateriaisRes] = await Promise.allSettled([
+      const [pontosRes, descartesRes, meusMateriaisRes] = await Promise.allSettled([
         api.get('/pontos'),
         api.get('/descartes/historico'),
-        api.get('/materiais'),
         api.get('/materiais/meus')
       ]);
       
@@ -32,9 +30,6 @@ export default function HomeGerador() {
       }
       if (descartesRes.status === 'fulfilled') {
         setDescartes(descartesRes.value.data);
-      }
-      if (materiaisRes.status === 'fulfilled') {
-        setMateriais(materiaisRes.value.data);
       }
       if (meusMateriaisRes.status === 'fulfilled') {
         setMeusMateriais(meusMateriaisRes.value.data);
@@ -49,9 +44,17 @@ export default function HomeGerador() {
   const filteredPontos = pontos.filter(ponto => {
     const matchesSearch = ponto.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          ponto.endereco.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesMaterial = !selectedMaterial || 
-                           ponto.materiais?.some(m => m.nome === selectedMaterial);
-    return matchesSearch && matchesMaterial;
+    
+    // Se selecionou um material, buscar sua categoria e filtrar pontos que aceitam essa categoria
+    if (selectedMaterial) {
+      const materialSelecionado = meusMateriais.find(m => m.nome === selectedMaterial);
+      if (materialSelecionado) {
+        const matchesMaterial = ponto.categoriasAceitas?.includes(materialSelecionado.categoria);
+        return matchesSearch && matchesMaterial;
+      }
+    }
+    
+    return matchesSearch;
   });
 
   const getStatusColor = (status) => {
@@ -106,7 +109,7 @@ export default function HomeGerador() {
               {/* Filtro por Material */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Filtrar por Material
+                  Filtrar por Material Disponível
                 </label>
                 <select
                   value={selectedMaterial}
@@ -114,9 +117,9 @@ export default function HomeGerador() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 >
                   <option value="">Todos os materiais</option>
-                  {materiais.map((material) => (
+                  {meusMateriais.map((material) => (
                     <option key={material.id} value={material.nome}>
-                      {material.nome}
+                      {material.nome} ({material.categoria})
                     </option>
                   ))}
                 </select>
