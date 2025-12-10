@@ -5,6 +5,8 @@ import HomeGerador from './pages/HomeGerador';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
 import MeusDescartes from './pages/MeusDescartes';
+import NovoDescarte from './pages/NovoDescarte';
+import NovoMaterial from './pages/NovoMaterial';
 import Layout from './components/Layout';
 
 // exemplo pra proxima tela apos login/cadastro
@@ -66,6 +68,26 @@ function App() {
               <PrivateRoute>
                 <Layout>
                   <MeusDescartes />
+                </Layout>
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/descartes/novo" 
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <NovoDescarte />
+                </Layout>
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/materiais/novo" 
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <NovoMaterial />
                 </Layout>
               </PrivateRoute>
             } 

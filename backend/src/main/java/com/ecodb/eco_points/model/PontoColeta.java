@@ -2,14 +2,18 @@ package com.ecodb.eco_points.model;
 
 import java.util.Set;
 
+import com.ecodb.eco_points.model.enums.CategoriaMaterial;
+
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -44,12 +48,9 @@ public class PontoColeta {
     @JoinColumn(name = "dono_id")
     private Usuario dono;
 
-    @ManyToMany
-    @JoinTable(
-        name = "ponto_coleta_materiais",
-        joinColumns = @JoinColumn(name = "ponto_coleta_id"),
-        inverseJoinColumns = @JoinColumn(name = "material_id")
-    )
-    
-    private Set<Material> materiais;
+    @ElementCollection(targetClass = CategoriaMaterial.class)
+    @CollectionTable(name = "ponto_coleta_categorias", joinColumns = @JoinColumn(name = "ponto_coleta_id"))
+    @Column(name = "categoria")
+    @Enumerated(EnumType.STRING)
+    private Set<CategoriaMaterial> categoriasAceitas;
 }
