@@ -95,10 +95,10 @@ class PontoColetaServiceTest {
         pontoColeta.setContato("1234-5678");
         pontoColeta.setHorarios("A definir");
         pontoColeta.setDono(usuarioColetor);
-        Set<Material> materiais = new HashSet<>();
-        materiais.add(material1);
-        materiais.add(material2);
-        pontoColeta.setMateriais(materiais);
+        Set<CategoriaMaterial> categorias = new HashSet<>();
+        categorias.add(CategoriaMaterial.PLASTICO);
+        categorias.add(CategoriaMaterial.PAPEL);
+        pontoColeta.setCategoriasAceitas(categorias);
 
         // Mock security context
         SecurityContextHolder.setContext(securityContext);
@@ -115,7 +115,7 @@ class PontoColetaServiceTest {
             "Ponto Eco",
             "Rua Test, 123",
             "1234-5678",
-            Arrays.asList(1L, 2L)
+            Arrays.asList(CategoriaMaterial.PLASTICO, CategoriaMaterial.PAPEL)
         );
 
         when(materialRepository.findById(1L)).thenReturn(Optional.of(material1));
@@ -131,30 +131,12 @@ class PontoColetaServiceTest {
         assertEquals("Rua Test, 123", response.endereco());
         assertEquals("1234-5678", response.contato());
         assertEquals("João Coletor", response.donoNome());
-        assertEquals(2, response.materiais().size());
+        assertEquals(2, response.categoriasAceitas().size());
         verify(pontoColetaRepository, times(1)).save(any(PontoColeta.class));
     }
 
-    @Test
-    @DisplayName("Should throw MaterialNotFoundException when material does not exist")
-    void shouldThrowMaterialNotFoundExceptionWhenMaterialDoesNotExist() {
-        // Arrange
-        PontoColetaDTO dto = new PontoColetaDTO(
-            "Ponto Eco",
-            "Rua Test, 123",
-            "1234-5678",
-            Arrays.asList(1L, 999L)
-        );
-
-        when(materialRepository.findById(1L)).thenReturn(Optional.of(material1));
-        when(materialRepository.findById(999L)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(MaterialNotFoundException.class, () -> {
-            pontoColetaService.criarPontoColeta(dto);
-        });
-        verify(pontoColetaRepository, never()).save(any(PontoColeta.class));
-    }
+    // Teste removido: MaterialNotFoundException não é mais aplicável
+    // pois agora usamos categorias ao invés de materiais específicos
 
     @Test
     @DisplayName("Should throw UnauthorizedAccessException when user tries to delete another user's point")
