@@ -2,6 +2,7 @@ package com.ecodb.eco_points.model;
 
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -50,6 +51,5 @@ public class PontoColeta {
         joinColumns = @JoinColumn(name = "ponto_coleta_id"),
         inverseJoinColumns = @JoinColumn(name = "material_id")
     )
-    
     private Set<Material> materiais;
 }

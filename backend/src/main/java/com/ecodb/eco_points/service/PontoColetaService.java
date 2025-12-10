@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,13 @@ import com.ecodb.eco_points.exception.UnauthorizedAccessException;
 import com.ecodb.eco_points.model.Material;
 import com.ecodb.eco_points.model.PontoColeta;
 import com.ecodb.eco_points.model.Usuario;
+import com.ecodb.eco_points.repository.DescarteRepository;
 import com.ecodb.eco_points.repository.MaterialRepository;
 import com.ecodb.eco_points.repository.PontoColetaRepository;
 import com.ecodb.eco_points.repository.UsuarioRepository;
 import com.ecodb.eco_points.repository.spec.PontoColetaSpecs;
+
+import jakarta.persistence.EntityManager;
 
 @Service
 public class PontoColetaService {
@@ -29,12 +33,17 @@ public class PontoColetaService {
     private PontoColetaRepository pontoColetaRepository;
     private MaterialRepository materialRepository;
     private UsuarioRepository usuarioRepository;
+    private DescarteRepository descarteRepository;
+    private EntityManager entityManager;
 
-    public PontoColetaService(PontoColetaRepository pontoColetaRepository, 
-        MaterialRepository materialRepository, UsuarioRepository usuarioRepository) {
-            this.materialRepository = materialRepository;
-            this.pontoColetaRepository = pontoColetaRepository;
-            this.usuarioRepository = usuarioRepository;
+    public PontoColetaService(PontoColetaRepository pontoColetaRepository,
+            MaterialRepository materialRepository, UsuarioRepository usuarioRepository,
+            DescarteRepository descarteRepository, EntityManager entityManager) {
+        this.materialRepository = materialRepository;
+        this.pontoColetaRepository = pontoColetaRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.descarteRepository = descarteRepository;
+        this.entityManager = entityManager;
     }
 
     @Transactional
@@ -59,7 +68,6 @@ public class PontoColetaService {
     @Transactional(readOnly = true)
     public List<PontoColetaResponseDTO> listarMeusPontosColeta() {
         Usuario usuarioLogado = obterUsuarioLogado();
-        
         List<PontoColeta> pontos = pontoColetaRepository.findByDono(usuarioLogado);
 
         return pontos.stream()
@@ -77,12 +85,10 @@ public class PontoColetaService {
         // Verificar se o ponto pertence ao usuário logado
         if (!ponto.getDono().getId().equals(usuarioLogado.getId())) {
             throw new UnauthorizedAccessException(
-                "Você não tem permissão para editar este ponto de coleta"
-            );
+                    "Você não tem permissão para editar este ponto de coleta");
         }
 
-
-         // Validar e atualizar materiais
+        // Validar e atualizar materiais
         Set<Material> materiais = validarEObterMateriais(dto.materiaisAceitos());
 
         // Atualizar dados do ponto
@@ -105,11 +111,28 @@ public class PontoColetaService {
 
         if (!ponto.getDono().getId().equals(usuarioLogado.getId())) {
             throw new UnauthorizedAccessException(
-                "Você não tem permissão para deletar este ponto de coleta"
-            );
+                    "Você não tem permissão para deletar este ponto de coleta");
         }
 
-        pontoColetaRepository.delete(ponto);
+        try {
+            entityManager.createNativeQuery(
+                    "DELETE FROM ponto_coleta_categorias WHERE ponto_coleta_id = :pontoId")
+                    .setParameter("pontoId", pontoId)
+                    .executeUpdate();
+
+            descarteRepository.deleteByPontoColeta(ponto);
+
+            entityManager.createNativeQuery(
+                    "DELETE FROM ponto_coleta_materiais WHERE ponto_coleta_id = :pontoId")
+                    .setParameter("pontoId", pontoId)
+                    .executeUpdate();
+
+            pontoColetaRepository.delete(ponto);
+
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException(
+                    "Falha ao deletar ponto. O ponto possui vínculos históricos inesperados que não puderam ser removidos. Contate o suporte.");
+        }
     }
 
     private Usuario obterUsuarioLogado() {
@@ -136,25 +159,23 @@ public class PontoColetaService {
         List<PontoColetaResponseDTO.MaterialResponseDTO> materiaisDTO = ponto.getMateriais()
                 .stream()
                 .map(material -> new PontoColetaResponseDTO.MaterialResponseDTO(
-                    material.getId(),
-                    material.getNome(),
-                    material.getCategoria().name(),
-                    material.getDestino().name()
-                ))
-            .collect(Collectors.toList());
+                        material.getId(),
+                        material.getNome(),
+                        material.getCategoria().name(),
+                        material.getDestino().name()))
+                .collect(Collectors.toList());
 
         return new PontoColetaResponseDTO(
-            ponto.getId(),
-            ponto.getNome(),
-            ponto.getEndereco(),
-            ponto.getContato(),
-            ponto.getHorarios(),
-            ponto.getLatitude(),
-            ponto.getLongitude(),
-            ponto.getDono().getNome(),
-            ponto.getDono().getEmail(),
-            materiaisDTO
-        );
+                ponto.getId(),
+                ponto.getNome(),
+                ponto.getEndereco(),
+                ponto.getContato(),
+                ponto.getHorarios(),
+                ponto.getLatitude(),
+                ponto.getLongitude(),
+                ponto.getDono().getNome(),
+                ponto.getDono().getEmail(),
+                materiaisDTO);
     }
 
     // Método de busca pública
