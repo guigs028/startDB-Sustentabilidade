@@ -200,13 +200,13 @@ export default function HomeGerador() {
                 </button>
               </div>
 
-              <div className="space-y-3">
+              <div className="max-h-96 overflow-y-auto space-y-3 pr-2">
                 {meusMateriais.length === 0 ? (
                   <p className="text-gray-500 text-sm text-center py-8">
                     Nenhum material cadastrado
                   </p>
                 ) : (
-                  meusMateriais.slice(0, 5).map((material) => (
+                  meusMateriais.map((material) => (
                     <div
                       key={material.id}
                       className="border border-gray-200 rounded-lg p-3 hover:shadow-sm transition"
@@ -231,15 +231,6 @@ export default function HomeGerador() {
                   ))
                 )}
               </div>
-
-              {meusMateriais.length > 5 && (
-                <button
-                  onClick={() => navigate('/materiais')}
-                  className="w-full mt-4 text-green-600 hover:text-green-700 text-sm font-medium"
-                >
-                  Ver todos os materiais
-                </button>
-              )}
             </div>
           </div>
         </div>
