@@ -1,15 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Home from './pages/Home';
+import HomeColetor from './pages/HomeColetor';
 import HomeGerador from './pages/HomeGerador';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
 import MeusDescartes from './pages/MeusDescartes';
 import NovoDescarte from './pages/NovoDescarte';
 import Layout from './components/Layout';
-
-// exemplo pra proxima tela apos login/cadastro
-const Dashboard = () => <div className="p-10 text-2xl">Bem-vindo ao Dashboard (area do Coletor/Gerador)</div>;
 
 // Rota Privada Wrapper
 function PrivateRoute({ children }) {
@@ -23,14 +21,18 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Home />} />
+          
           <Route 
-            path="/dashboard" 
+            path="/coletor" 
             element={
               <PrivateRoute>
-                <Dashboard />
+                <Layout>
+                  <HomeColetor />
+                </Layout>
               </PrivateRoute>
             } 
           />
+          
           <Route 
             path="/gerador" 
             element={
@@ -41,6 +43,7 @@ function App() {
               </PrivateRoute>
             } 
           />
+          
           <Route 
             path="/profile" 
             element={
@@ -51,6 +54,7 @@ function App() {
               </PrivateRoute>
             } 
           />
+          
           <Route 
             path="/profile/edit" 
             element={
@@ -61,6 +65,7 @@ function App() {
               </PrivateRoute>
             } 
           />
+          
           <Route 
             path="/descartes" 
             element={
@@ -71,6 +76,7 @@ function App() {
               </PrivateRoute>
             } 
           />
+          
           <Route 
             path="/descartes/novo" 
             element={

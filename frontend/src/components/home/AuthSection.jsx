@@ -26,10 +26,10 @@ export default function AuthSection() {
     e.preventDefault();
     setError("");
 
-    if (isLogin) {
+      if (isLogin) {
       const result = await login(formData.email, formData.senha);
       if (result.success) {
-        // Pegar o token do localStorage
+        // Usar utilitários de token adicionados pela main para decidir o redirecionamento
         const token = localStorage.getItem('token');
         const role = getUserRole(token);
         const redirectPath = getRedirectPathByRole(role);

@@ -2,6 +2,10 @@ import React from 'react';
 import { Trash2, Calendar } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 
+const displayStatus = (status) => {
+    return status === 'CONCLUIDO' ? 'APROVADO' : status;
+};
+
 export default function DescarteCard({ descarte, onCancel }) {
   return (
     <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow">
@@ -13,7 +17,7 @@ export default function DescarteCard({ descarte, onCancel }) {
             <h3 className="text-xl font-bold text-gray-900">
               {descarte.materialNome || 'Material'} 
             </h3>
-            <StatusBadge status={descarte.status} />
+            <StatusBadge status={displayStatus(descarte.status)} />
           </div>
 
           <div className="space-y-1 text-sm text-gray-600">

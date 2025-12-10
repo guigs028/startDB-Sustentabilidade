@@ -50,6 +50,5 @@ public class PontoColeta {
         joinColumns = @JoinColumn(name = "ponto_coleta_id"),
         inverseJoinColumns = @JoinColumn(name = "material_id")
     )
-    
     private Set<Material> materiais;
 }

@@ -40,7 +40,13 @@ export default function MeusDescartes() {
 
   const filteredDescartes = filterStatus === 'TODOS' 
     ? descartes 
-    : descartes.filter(d => d.status === filterStatus);
+    : descartes.filter(d => {
+        if (filterStatus === 'APROVADO') {
+          return d.status === 'CONCLUIDO';
+        }
+        
+        return d.status === filterStatus;  
+      });
 
   if (loading) return <div className="py-12 text-center text-gray-500">Carregando...</div>;
 
