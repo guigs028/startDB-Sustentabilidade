@@ -1,5 +1,7 @@
 package com.ecodb.eco_points.dto;
 
+import com.ecodb.eco_points.model.enums.CategoriaMaterial;
+
 import java.util.List;
 
 public record PontoColetaResponseDTO(
@@ -12,13 +14,6 @@ public record PontoColetaResponseDTO(
     Double longitude,
     String donoNome,
     String donoEmail,
-    List<MaterialResponseDTO> materiais
+    List<CategoriaMaterial> categoriasAceitas
 ) {
-    public record MaterialResponseDTO(
-        Long id,
-        String nome,
-        String categoria,
-        String destino
-    ) {
-    }
 }

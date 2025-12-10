@@ -7,6 +7,7 @@ export default function HomeGerador() {
   const navigate = useNavigate();
   const [pontos, setPontos] = useState([]);
   const [descartes, setDescartes] = useState([]);
+  const [meusMateriais, setMeusMateriais] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMaterial, setSelectedMaterial] = useState('');
   const [materiais, setMateriais] = useState([]);
@@ -19,10 +20,11 @@ export default function HomeGerador() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [pontosRes, descartesRes, materiaisRes] = await Promise.allSettled([
+      const [pontosRes, descartesRes, materiaisRes, meusMateriaisRes] = await Promise.allSettled([
         api.get('/pontos'),
         api.get('/descartes/historico'),
-        api.get('/materials')
+        api.get('/materiais'),
+        api.get('/materiais/meus')
       ]);
       
       if (pontosRes.status === 'fulfilled') {
@@ -33,6 +35,9 @@ export default function HomeGerador() {
       }
       if (materiaisRes.status === 'fulfilled') {
         setMateriais(materiaisRes.value.data);
+      }
+      if (meusMateriaisRes.status === 'fulfilled') {
+        setMeusMateriais(meusMateriaisRes.value.data);
       }
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
@@ -180,15 +185,15 @@ export default function HomeGerador() {
             </div>
           </div>
 
-          {/* Coluna Direita - Meus Descartes */}
+          {/* Coluna Direita - Meus Materiais */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold text-gray-900">
-                  Meus Descartes
+                  Meus Materiais
                 </h2>
                 <button
-                  onClick={() => navigate('/descartes/novo')}
+                  onClick={() => navigate('/materiais/novo')}
                   className="text-green-600 hover:text-green-700"
                 >
                   <Plus className="w-5 h-5" />
@@ -196,48 +201,43 @@ export default function HomeGerador() {
               </div>
 
               <div className="space-y-3">
-                {descartes.length === 0 ? (
+                {meusMateriais.length === 0 ? (
                   <p className="text-gray-500 text-sm text-center py-8">
-                    Nenhum descarte registrado
+                    Nenhum material cadastrado
                   </p>
                 ) : (
-                  descartes.slice(0, 5).map((descarte) => (
+                  meusMateriais.slice(0, 5).map((material) => (
                     <div
-                      key={descarte.id}
-                      className="border border-gray-200 rounded-lg p-3 hover:shadow-sm transition cursor-pointer"
-                      onClick={() => navigate(`/descartes/${descarte.id}`)}
+                      key={material.id}
+                      className="border border-gray-200 rounded-lg p-3 hover:shadow-sm transition"
                     >
                       <div className="flex justify-between items-start mb-2">
                         <span className="font-medium text-gray-900 text-sm">
-                          {descarte.material?.nome || 'Material'}
+                          {material.nome}
                         </span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(descarte.status)}`}>
-                          {descarte.status}
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                          {material.categoria}
                         </span>
                       </div>
                       
                       <p className="text-gray-600 text-xs mb-1">
-                        {descarte.quantidade} {descarte.unidadeMedida?.toLowerCase() || descarte.unidadeMedida}
+                        Destino: {material.destino}
                       </p>
                       
                       <p className="text-gray-500 text-xs">
-                        {descarte.pontoColeta?.nome || 'Ponto de Coleta'}
-                      </p>
-                      
-                      <p className="text-gray-400 text-xs mt-2">
-                        {new Date(descarte.dataCriacao).toLocaleDateString('pt-BR')}
+                        Unidade: {material.unidadePadrao || 'Un'}
                       </p>
                     </div>
                   ))
                 )}
               </div>
 
-              {descartes.length > 5 && (
+              {meusMateriais.length > 5 && (
                 <button
-                  onClick={() => navigate('/descartes')}
+                  onClick={() => navigate('/materiais')}
                   className="w-full mt-4 text-green-600 hover:text-green-700 text-sm font-medium"
                 >
-                  Ver todos os descartes
+                  Ver todos os materiais
                 </button>
               )}
             </div>
