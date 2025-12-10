@@ -27,7 +27,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.ecodb.eco_points.dto.PontoColetaDTO;
 import com.ecodb.eco_points.dto.PontoColetaResponseDTO;
-import com.ecodb.eco_points.exception.MaterialNotFoundException;
 import com.ecodb.eco_points.exception.UnauthorizedAccessException;
 import com.ecodb.eco_points.model.Material;
 import com.ecodb.eco_points.model.PontoColeta;
@@ -95,10 +94,12 @@ class PontoColetaServiceTest {
         pontoColeta.setContato("1234-5678");
         pontoColeta.setHorarios("A definir");
         pontoColeta.setDono(usuarioColetor);
-        Set<CategoriaMaterial> categorias = new HashSet<>();
-        categorias.add(CategoriaMaterial.PLASTICO);
-        categorias.add(CategoriaMaterial.PAPEL);
-        pontoColeta.setCategoriasAceitas(categorias);
+        
+        // CORREÇÃO: Usamos Set<Material> e setMateriais
+        Set<Material> materiais = new HashSet<>();
+        materiais.add(material1);
+        materiais.add(material2);
+        pontoColeta.setMateriais(materiais);
 
         // Mock security context
         SecurityContextHolder.setContext(securityContext);
@@ -110,14 +111,18 @@ class PontoColetaServiceTest {
     @Test
     @DisplayName("Should create collection point successfully")
     void shouldCreatePontoColetaSuccessfully() {
-        // Arrange
+        // Arrange - Passamos IDs (List<Long>)
         PontoColetaDTO dto = new PontoColetaDTO(
             "Ponto Eco",
             "Rua Test, 123",
             "1234-5678",
-            Arrays.asList(CategoriaMaterial.PLASTICO, CategoriaMaterial.PAPEL)
+            Arrays.asList(1L, 2L) 
         );
 
+        // Mocks necessários para o findById dentro do loop validarEObterMateriais
+        when(materialRepository.findById(1L)).thenReturn(Optional.of(material1));
+        when(materialRepository.findById(2L)).thenReturn(Optional.of(material2));
+        
         when(pontoColetaRepository.save(any(PontoColeta.class))).thenReturn(pontoColeta);
 
         // Act
@@ -129,12 +134,12 @@ class PontoColetaServiceTest {
         assertEquals("Rua Test, 123", response.endereco());
         assertEquals("1234-5678", response.contato());
         assertEquals("João Coletor", response.donoNome());
-        assertEquals(2, response.categoriasAceitas().size());
+        
+        // Verificamos a lista de materiais
+        assertEquals(2, response.materiais().size()); 
+        
         verify(pontoColetaRepository, times(1)).save(any(PontoColeta.class));
     }
-
-    // Teste removido: MaterialNotFoundException não é mais aplicável
-    // pois agora usamos categorias ao invés de materiais específicos
 
     @Test
     @DisplayName("Should throw UnauthorizedAccessException when user tries to delete another user's point")
@@ -145,8 +150,12 @@ class PontoColetaServiceTest {
         outroUsuario.setNome("Outro Usuario");
         outroUsuario.setEmail("outro@example.com");
 
-        pontoColeta.setDono(outroUsuario);
-        when(pontoColetaRepository.findById(1L)).thenReturn(Optional.of(pontoColeta));
+        // Precisamos criar um objeto novo ou alterar o mock para este teste específico
+        PontoColeta pontoOutroDono = new PontoColeta();
+        pontoOutroDono.setId(1L);
+        pontoOutroDono.setDono(outroUsuario);
+
+        when(pontoColetaRepository.findById(1L)).thenReturn(Optional.of(pontoOutroDono));
 
         // Act & Assert
         assertThrows(UnauthorizedAccessException.class, () -> {
