@@ -13,10 +13,12 @@ export default function PontoModal({ isOpen, onClose, onSubmit, editingPonto = n
   const [materiais, setMateriais] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
+    setFieldErrors({});
     if (isOpen) {
-      loadMateriais();
+       loadMateriais();
     }
   }, [isOpen]);
 
@@ -65,7 +67,8 @@ export default function PontoModal({ isOpen, onClose, onSubmit, editingPonto = n
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    setFieldErrors({});
+
     if (!formData.nome || !formData.endereco || !formData.contato || !formData.horarios) {
       alert('Por favor, preencha todos os campos obrigatórios.');
       return;
@@ -78,17 +81,17 @@ export default function PontoModal({ isOpen, onClose, onSubmit, editingPonto = n
 
     setIsSubmitting(true);
     try {
-      console.log('Dados do formulário:', formData);
       await onSubmit(formData);
       onClose();
     } catch (error) {
       console.error('Erro ao salvar ponto:', error);
-      console.error('Response:', error.response);
-      const errorMessage = error.response?.data?.message 
-        || error.response?.data?.error
-        || error.message 
-        || 'Erro ao salvar ponto. Tente novamente.';
-      alert(`Erro: ${errorMessage}`);
+      
+      if (error.response?.data?.errors) {
+        setFieldErrors(error.response.data.errors);
+      } else {
+        const errorMessage = error.response?.data?.message || 'Erro ao salvar.';
+        alert(`Erro: ${errorMessage}`);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -133,12 +136,24 @@ export default function PontoModal({ isOpen, onClose, onSubmit, editingPonto = n
             </label>
             <input
               type="text"
-              placeholder="Ex: Rua das Flores, 123"
+              placeholder="Ex: Rua das Flores, 123 (Mínimo 10 caracteres)"
               value={formData.endereco}
-              onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              minLength={10}
+              onChange={(e) => {
+                setFormData({ ...formData, endereco: e.target.value });
+                if (fieldErrors.endereco) {
+                    setFieldErrors({...fieldErrors, endereco: null});
+                }
+              }}
+              className={`w-full px-4 py-3 bg-gray-50 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent 
+                ${fieldErrors.endereco ? 'border-red-500' : 'border-gray-300'}`} // Borda vermelha se tiver erro
               required
             />
+            {fieldErrors.endereco && (
+              <p className="mt-1 text-sm text-red-500">
+                {fieldErrors.endereco}
+              </p>
+            )}
           </div>
 
           <div>
