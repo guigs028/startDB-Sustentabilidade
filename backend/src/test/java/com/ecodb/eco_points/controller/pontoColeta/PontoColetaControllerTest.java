@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.ecodb.eco_points.controller.PontoColetaController;
 import com.ecodb.eco_points.dto.PontoColetaDTO;
 import com.ecodb.eco_points.dto.PontoColetaResponseDTO;
+import com.ecodb.eco_points.model.enums.CategoriaMaterial;
 import com.ecodb.eco_points.service.PontoColetaService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,9 +50,9 @@ class PontoColetaControllerTest {
 
     @BeforeEach
     void setUp() {
-        List<PontoColetaResponseDTO.MaterialResponseDTO> materiais = Arrays.asList(
-            new PontoColetaResponseDTO.MaterialResponseDTO(1L, "Plástico", "PLASTICO", "RECICLAGEM"),
-            new PontoColetaResponseDTO.MaterialResponseDTO(2L, "Papel", "PAPEL", "RECICLAGEM")
+        List<CategoriaMaterial> categorias = Arrays.asList(
+            CategoriaMaterial.PLASTICO,
+            CategoriaMaterial.PAPEL
         );
 
         pontoColetaResponse = new PontoColetaResponseDTO(
@@ -64,7 +65,7 @@ class PontoColetaControllerTest {
             null,
             "João Coletor",
             "joao@example.com",
-            materiais
+            categorias
         );
     }
 
@@ -77,7 +78,7 @@ class PontoColetaControllerTest {
             "Ponto Eco",
             "Rua Test, 123",
             "1234-5678",
-            Arrays.asList(1L, 2L)
+            Arrays.asList(CategoriaMaterial.PLASTICO, CategoriaMaterial.PAPEL)
         );
 
         when(pontoColetaService.criarPontoColeta(any(PontoColetaDTO.class)))
@@ -94,8 +95,8 @@ class PontoColetaControllerTest {
             .andExpect(jsonPath("$.endereco").value("Rua Test, 123"))
             .andExpect(jsonPath("$.contato").value("1234-5678"))
             .andExpect(jsonPath("$.donoNome").value("João Coletor"))
-            .andExpect(jsonPath("$.materiais").isArray())
-            .andExpect(jsonPath("$.materiais[0].nome").value("Plástico"));
+            .andExpect(jsonPath("$.categoriasAceitas").isArray())
+            .andExpect(jsonPath("$.categoriasAceitas[0]").value("PLASTICO"));
     }
 
     @Test
@@ -107,7 +108,7 @@ class PontoColetaControllerTest {
             "",
             "Rua Test, 123",
             "1234-5678",
-            Arrays.asList(1L, 2L)
+            Arrays.asList(CategoriaMaterial.PLASTICO, CategoriaMaterial.PAPEL)
         );
 
         // Act & Assert
