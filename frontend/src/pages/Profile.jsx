@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { userService } from '../services/userService';
-import { useAuth } from '../contexts/AuthContext';
+// import { useAuth } from '../contexts/AuthContext';
 import { pontoService } from '../services/pontoService';
 import api from '../services/api';
 
@@ -9,7 +9,7 @@ import StatsOverview from '../components/profile/StatsOverview';
 import RecentActivity from '../components/profile/RecentActivity';
 
 export default function Profile() {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [descartes, setDescartes] = useState([]);
   const [pontos, setPontos] = useState([]);
@@ -24,18 +24,13 @@ export default function Profile() {
     try {
       setLoading(true);
       const profileData = await userService.getProfile();
-      console.log('Profile data recebido:', profileData);
       setProfile(profileData);
 
-      // Usar o tipo do perfil retornado pelo backend
       const userType = profileData?.tipo || profileData?.tipoUsuario;
-      console.log('User type detectado:', userType);
 
-      // Carregar dados específicos do tipo de usuário
       if (userType === 'COLETOR') {
         try {
           const pontosData = await pontoService.getMeusPontos();
-          console.log('Pontos carregados:', pontosData);
           setPontos(Array.isArray(pontosData) ? pontosData : []);
         } catch (err) {
           console.error('Erro ao carregar pontos:', err);
@@ -44,7 +39,6 @@ export default function Profile() {
       } else {
         try {
           const descartesData = await api.get('/descartes/historico');
-          console.log('Descartes carregados:', descartesData.data);
           setDescartes(descartesData.data || []);
         } catch (err) {
           console.error('Erro ao carregar descartes:', err);
@@ -60,9 +54,7 @@ export default function Profile() {
   };
 
   const userType = profile?.tipo || profile?.tipoUsuario;
-  console.log('Renderizando com userType:', userType, 'Profile:', profile);
   
-  // Calcular materiais únicos aceitos em todos os pontos do coletor
   const materiaisUnicos = new Set();
   if (userType === 'COLETOR') {
     pontos.forEach(ponto => {

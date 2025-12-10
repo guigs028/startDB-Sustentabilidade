@@ -78,7 +78,6 @@ export default function HomeColetor() {
 
   const handleAprovarEntrega = async (entregaId) => {
     try {
-      console.log('Aprovando entrega:', entregaId);
       await api.post(`/descartes/${entregaId}/status`, {
         status: 'CONCLUIDO'
       });
