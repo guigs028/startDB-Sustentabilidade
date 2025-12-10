@@ -54,6 +54,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         System.out.println("Iniciando o seeder");
 
+
         List<Material> materiais = Arrays.asList(
             criarMaterial("Garrafa PET", CategoriaMaterial.PLASTICO, DestinoMaterial.RECICLAGEM, UnidadeMedida.UNIDADE),
             criarMaterial("Caixa de Papelao", CategoriaMaterial.PAPEL, DestinoMaterial.RECICLAGEM, UnidadeMedida.KILOGRAMA),
@@ -68,8 +69,8 @@ public class DatabaseSeeder implements CommandLineRunner {
         );
         materialRepository.saveAll(materiais);
         System.out.println("Materiais criados.");
-        
-        // CRIAR USUÁRIOS 
+
+        // CRIAR USUÁRIOS PRIMEIRO
         String senhaHasheada = passwordEncoder.encode("$senhaqualquer");
 
         Usuario joao = new Usuario();
@@ -90,7 +91,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         usuarioRepository.saveAll(Arrays.asList(joao, maria));
         System.out.println("Usuarios criados.");
-
+        
         // CRIAR PONTO DE COLETA 
         PontoColeta ecoponto = new PontoColeta();
         ecoponto.setNome("Ecoponto Centro");
@@ -101,6 +102,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         ecoponto.setLongitude(-46.65598);
         ecoponto.setDono(maria);
 
+        // Define as CATEGORIAS de materiais aceitas pelo ponto
         Set<Material> materiaisAceitos = new HashSet<>();
         materiaisAceitos.add(encontrarMaterial(materiais, "Garrafa PET"));
         materiaisAceitos.add(encontrarMaterial(materiais, "Lata de refrigerante"));

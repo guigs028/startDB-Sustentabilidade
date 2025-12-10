@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.ecodb.eco_points.controller.PontoColetaController;
 import com.ecodb.eco_points.dto.PontoColetaDTO;
 import com.ecodb.eco_points.dto.PontoColetaResponseDTO;
+import com.ecodb.eco_points.model.enums.CategoriaMaterial;
 import com.ecodb.eco_points.service.PontoColetaService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,10 +50,10 @@ class PontoColetaControllerTest {
 
     @BeforeEach
     void setUp() {
-        List<PontoColetaResponseDTO.MaterialResponseDTO> materiais = Arrays.asList(
-            new PontoColetaResponseDTO.MaterialResponseDTO(1L, "Plástico", "PLASTICO", "RECICLAGEM"),
-            new PontoColetaResponseDTO.MaterialResponseDTO(2L, "Papel", "PAPEL", "RECICLAGEM")
-        );
+        var material1 = new PontoColetaResponseDTO.MaterialResponseDTO(1L, "Garrafa PET", "PLASTICO", "RECICLAGEM");
+        var material2 = new PontoColetaResponseDTO.MaterialResponseDTO(2L, "Papelão", "PAPEL", "RECICLAGEM");
+        
+        List<PontoColetaResponseDTO.MaterialResponseDTO> materiais = Arrays.asList(material1, material2);
 
         pontoColetaResponse = new PontoColetaResponseDTO(
             1L,
@@ -95,7 +96,7 @@ class PontoColetaControllerTest {
             .andExpect(jsonPath("$.contato").value("1234-5678"))
             .andExpect(jsonPath("$.donoNome").value("João Coletor"))
             .andExpect(jsonPath("$.materiais").isArray())
-            .andExpect(jsonPath("$.materiais[0].nome").value("Plástico"));
+            .andExpect(jsonPath("$.materiais[0].categoria").value("PLASTICO"));
     }
 
     @Test
@@ -107,7 +108,7 @@ class PontoColetaControllerTest {
             "",
             "Rua Test, 123",
             "1234-5678",
-            Arrays.asList(1L, 2L)
+            Arrays.asList(1L)
         );
 
         // Act & Assert
@@ -132,7 +133,9 @@ class PontoColetaControllerTest {
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$[0].id").value(1))
             .andExpect(jsonPath("$[0].nome").value("Ponto Eco"))
-            .andExpect(jsonPath("$[0].materiais").isArray());
+            .andExpect(jsonPath("$[0].materiais").isArray())
+            .andExpect(jsonPath("$[0].materiais[0].categoria").value("PLASTICO"))
+            .andExpect(jsonPath("$[0].materiais[1].categoria").value("PAPEL"));
     }
 
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Input from "../ui/Input";
+import { getUserRole, getRedirectPathByRole } from "../../utils/jwtUtils";
 
 export default function AuthSection() {
   const [isLogin, setIsLogin] = useState(true);
@@ -25,16 +26,14 @@ export default function AuthSection() {
     e.preventDefault();
     setError("");
 
-    if (isLogin) {
+      if (isLogin) {
       const result = await login(formData.email, formData.senha);
       if (result.success) {
-        // Redirect based on user type stored in JWT token
-        const userType = result.user?.tipo;
-        if (userType === "COLETOR") {
-          navigate("/coletor/dashboard");
-        } else {
-          navigate("/dashboard"); // Default for GERADOR
-        }
+        // Usar utilitários de token adicionados pela main para decidir o redirecionamento
+        const token = localStorage.getItem('token');
+        const role = getUserRole(token);
+        const redirectPath = getRedirectPathByRole(role);
+        navigate(redirectPath);
       } else {
         setError("Credenciais inválidas.");
       }

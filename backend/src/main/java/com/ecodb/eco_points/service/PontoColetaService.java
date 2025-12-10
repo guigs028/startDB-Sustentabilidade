@@ -41,7 +41,6 @@ public class PontoColetaService {
     public PontoColetaResponseDTO criarPontoColeta(PontoColetaDTO dto) {
         Usuario usuarioLogado = obterUsuarioLogado();
 
-        // Validar se os materiais existem
         Set<Material> materiais = validarEObterMateriais(dto.materiaisAceitos());
 
         PontoColeta pontoColeta = new PontoColeta();
@@ -82,7 +81,8 @@ public class PontoColetaService {
             );
         }
 
-        // Validar e atualizar materiais
+
+         // Validar e atualizar materiais
         Set<Material> materiais = validarEObterMateriais(dto.materiaisAceitos());
 
         // Atualizar dados do ponto
@@ -141,7 +141,7 @@ public class PontoColetaService {
                     material.getCategoria().name(),
                     material.getDestino().name()
                 ))
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
 
         return new PontoColetaResponseDTO(
             ponto.getId(),

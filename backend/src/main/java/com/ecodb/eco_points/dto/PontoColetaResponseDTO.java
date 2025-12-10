@@ -1,5 +1,6 @@
 package com.ecodb.eco_points.dto;
 
+
 import java.util.List;
 
 public record PontoColetaResponseDTO(

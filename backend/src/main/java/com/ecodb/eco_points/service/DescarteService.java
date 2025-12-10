@@ -46,7 +46,7 @@ public class DescarteService {
                 Material material = materialRepository.findById(dto.materialId())
                                 .orElseThrow(() -> new IllegalArgumentException("Material não encontrado"));
 
-                // validar se o Ponto aceita este tipo de material
+                // validar se o Ponto aceita esta CATEGORIA de material
                 if (!pontoColeta.getMateriais().contains(material)) {
                         throw new IllegalArgumentException("Este ponto não aceita este tipo de material");
                 }
