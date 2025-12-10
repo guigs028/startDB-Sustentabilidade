@@ -118,8 +118,6 @@ class PontoColetaServiceTest {
             Arrays.asList(CategoriaMaterial.PLASTICO, CategoriaMaterial.PAPEL)
         );
 
-        when(materialRepository.findById(1L)).thenReturn(Optional.of(material1));
-        when(materialRepository.findById(2L)).thenReturn(Optional.of(material2));
         when(pontoColetaRepository.save(any(PontoColeta.class))).thenReturn(pontoColeta);
 
         // Act
