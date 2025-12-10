@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../services/userService';
-import { Mail, Phone, MapPin, Edit, LogOut } from 'lucide-react';
+import { Mail, Phone, MapPin, Edit } from 'lucide-react';
 import api from '../services/api';
 
 export default function Profile() {
@@ -23,6 +23,7 @@ export default function Profile() {
         api.get('/descartes/historico')
       ]);
       setProfile(profileData);
+      // Garante que descartes seja sempre um array
       setDescartes(descartesData.data || []);
     } catch (err) {
       setError('Erro ao carregar perfil');
@@ -32,20 +33,13 @@ export default function Profile() {
     }
   };
 
-  // Calcular estatísticas
-  const descartesRegistrados = descartes.length;
-  const descartesAprovados = descartes.filter(d => d.status === 'APROVADO' || d.status === 'CONCLUIDO').length;
-  const impactoKg = descartes
-    .filter(d => d.status === 'APROVADO' || d.status === 'CONCLUIDO')
-    .reduce((acc, d) => {
-      // Converter para kg se necessário
-      let quantidade = d.quantidade || 0;
-      if (d.unidadeMedida === 'GRAMA') quantidade = quantidade / 1000;
-      else if (d.unidadeMedida !== 'KILOGRAMA') quantidade = 0;
-      return acc + quantidade;
-    }, 0);
+  // --- ESTATÍSTICAS ---
 
-  // Pegar inicial do nome
+  const listaAprovados = descartes.filter(d => d.status === 'APROVADO' || d.status === 'CONCLUIDO');
+
+  const countAprovados = listaAprovados.length;
+  const countTotal = descartes.length;
+
   const getInitial = (nome) => {
     return nome ? nome.charAt(0).toUpperCase() : 'U';
   };
@@ -115,19 +109,14 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Estatísticas */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow p-6 text-center">
             <p className="text-sm text-gray-500 mb-2">Descartes Registrados</p>
-            <p className="text-3xl font-bold text-green-600">{descartesRegistrados}</p>
+            <p className="text-3xl font-bold text-green-600">{countTotal}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6 text-center">
             <p className="text-sm text-gray-500 mb-2">Descartes Aprovados</p>
-            <p className="text-3xl font-bold text-green-600">{descartesAprovados}</p>
-          </div>
-          <div className="bg-white rounded-lg shadow p-6 text-center">
-            <p className="text-sm text-gray-500 mb-2">Impacto (kg)</p>
-            <p className="text-3xl font-bold text-blue-600">{Math.round(impactoKg)}</p>
+            <p className="text-3xl font-bold text-green-600">{countAprovados}</p>
           </div>
         </div>
 
@@ -140,15 +129,19 @@ export default function Profile() {
           ) : (
             <div className="space-y-3">
               {descartes.slice(0, 5).map((descarte) => (
-                <div key={descarte.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                <div key={descarte.id || Math.random()} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
                   <div>
-                    <p className="font-medium text-gray-900">{descarte.material?.nome || 'Material'}</p> {/* Pegar nome de materiais */}
+                    <p className="font-medium text-gray-900">
+                        {descarte.materialNome || descarte.material?.nome || 'Material sem nome'}
+                    </p> 
+                    
                     <p className="text-sm text-gray-500">
-                      {descarte.quantidade} {descarte.unidadeMedida?.toLowerCase()} - {descarte.pontoColeta?.nome || 'Ponto de Coleta'}
+                      {descarte.quantidade} {descarte.unidadeMedida?.toLowerCase()} - {descarte.pontoColetaNome || descarte.pontoColeta?.nome || 'Ponto de Coleta'}
                     </p>
                   </div>
+
                   <span className="text-sm text-green-600 font-medium">
-                    {new Date(descarte.dataCriacao).toLocaleDateString('pt-BR')}
+                    {descarte.dataCriacao ? new Date(descarte.dataCriacao).toLocaleDateString('pt-BR') : '-'}
                   </span>
                 </div>
               ))}
