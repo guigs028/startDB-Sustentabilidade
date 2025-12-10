@@ -41,13 +41,15 @@ public class PontoColetaService {
     public PontoColetaResponseDTO criarPontoColeta(PontoColetaDTO dto) {
         Usuario usuarioLogado = obterUsuarioLogado();
 
+        Set<Material> materiais = validarEObterMateriais(dto.materiaisAceitos());
+
         PontoColeta pontoColeta = new PontoColeta();
         pontoColeta.setNome(dto.nome());
         pontoColeta.setEndereco(dto.endereco());
         pontoColeta.setContato(dto.contato());
         pontoColeta.setHorarios("A definir"); // Valor padrão
         pontoColeta.setDono(usuarioLogado);
-        pontoColeta.setCategoriasAceitas(new HashSet<>(dto.categoriasAceitas()));
+        pontoColeta.setMateriais(materiais);
 
         PontoColeta pontoSalvo = pontoColetaRepository.save(pontoColeta);
 
@@ -79,11 +81,15 @@ public class PontoColetaService {
             );
         }
 
+
+         // Validar e atualizar materiais
+        Set<Material> materiais = validarEObterMateriais(dto.materiaisAceitos());
+
         // Atualizar dados do ponto
         ponto.setNome(dto.nome());
         ponto.setEndereco(dto.endereco());
         ponto.setContato(dto.contato());
-        ponto.setCategoriasAceitas(new HashSet<>(dto.categoriasAceitas()));
+        ponto.setMateriais(materiais);
 
         PontoColeta pontoAtualizado = pontoColetaRepository.save(ponto);
 
@@ -114,7 +120,29 @@ public class PontoColetaService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
     }
 
+    private Set<Material> validarEObterMateriais(List<Long> materiaisIds) {
+        Set<Material> materiais = new HashSet<>();
+
+        for (Long materialId : materiaisIds) {
+            Material material = materialRepository.findById(materialId)
+                    .orElseThrow(() -> new MaterialNotFoundException(materialId));
+            materiais.add(material);
+        }
+
+        return materiais;
+    }
+
     private PontoColetaResponseDTO converterParaResponseDTO(PontoColeta ponto) {
+        List<PontoColetaResponseDTO.MaterialResponseDTO> materiaisDTO = ponto.getMateriais()
+                .stream()
+                .map(material -> new PontoColetaResponseDTO.MaterialResponseDTO(
+                    material.getId(),
+                    material.getNome(),
+                    material.getCategoria().name(),
+                    material.getDestino().name()
+                ))
+            .collect(Collectors.toList());
+
         return new PontoColetaResponseDTO(
             ponto.getId(),
             ponto.getNome(),
@@ -125,7 +153,7 @@ public class PontoColetaService {
             ponto.getLongitude(),
             ponto.getDono().getNome(),
             ponto.getDono().getEmail(),
-            ponto.getCategoriasAceitas().stream().collect(Collectors.toList())
+            materiaisDTO
         );
     }
 

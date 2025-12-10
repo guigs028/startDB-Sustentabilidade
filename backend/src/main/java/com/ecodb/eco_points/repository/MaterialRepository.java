@@ -8,13 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.ecodb.eco_points.model.Material;
-import com.ecodb.eco_points.model.Usuario;
 
 public interface  MaterialRepository extends JpaRepository<Material, Long> {
     Optional<Material> findByNome(String nome);
-    List<Material> findByUsuario(Usuario usuario);
     
-    @Query("SELECT m FROM Material m WHERE m.usuario = :usuario AND m.id NOT IN " +
-           "(SELECT d.material.id FROM Descarte d WHERE d.usuario = :usuario)")
-    List<Material> findByUsuarioSemDescartes(@Param("usuario") Usuario usuario);
+    @Query("SELECT DISTINCT m FROM PontoColeta p JOIN p.materiais m WHERE p.dono.email = :email")
+    List<Material> findAllByDonoEmail(@Param("email") String email);
 }

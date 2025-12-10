@@ -54,6 +54,22 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         System.out.println("Iniciando o seeder");
 
+
+        List<Material> materiais = Arrays.asList(
+            criarMaterial("Garrafa PET", CategoriaMaterial.PLASTICO, DestinoMaterial.RECICLAGEM, UnidadeMedida.UNIDADE),
+            criarMaterial("Caixa de Papelao", CategoriaMaterial.PAPEL, DestinoMaterial.RECICLAGEM, UnidadeMedida.KILOGRAMA),
+            criarMaterial("Lata de refrigerante", CategoriaMaterial.METAL, DestinoMaterial.RECICLAGEM, UnidadeMedida.UNIDADE),
+            criarMaterial("Garrafa de Vidro", CategoriaMaterial.VIDRO, DestinoMaterial.RECICLAGEM, UnidadeMedida.KILOGRAMA),
+            criarMaterial("Casca de Fruta/Legume", CategoriaMaterial.ORGANICO, DestinoMaterial.COMPOSTAGEM, UnidadeMedida.KILOGRAMA),
+            criarMaterial("resto de Comida", CategoriaMaterial.ORGANICO, DestinoMaterial.COMPOSTAGEM, UnidadeMedida.KILOGRAMA),
+            criarMaterial("oleo de Cozinha Usado", CategoriaMaterial.OLEO, DestinoMaterial.DESCARTE_ESPECIAL, UnidadeMedida.LITRO),
+            criarMaterial("Pilhas e Baterias", CategoriaMaterial.ELETRONICO, DestinoMaterial.DESCARTE_ESPECIAL, UnidadeMedida.UNIDADE),
+            criarMaterial("Celular Quebrado", CategoriaMaterial.ELETRONICO, DestinoMaterial.REUSO, UnidadeMedida.UNIDADE),
+            criarMaterial("pote de Vidro (Conserva)", CategoriaMaterial.VIDRO, DestinoMaterial.REUSO, UnidadeMedida.UNIDADE)
+        );
+        materialRepository.saveAll(materiais);
+        System.out.println("Materiais criados.");
+
         // CRIAR USUÁRIOS PRIMEIRO
         String senhaHasheada = passwordEncoder.encode("$senhaqualquer");
 
@@ -75,22 +91,6 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         usuarioRepository.saveAll(Arrays.asList(joao, maria));
         System.out.println("Usuarios criados.");
-
-        // CRIAR MATERIAIS (associados ao usuário João)
-        List<Material> materiais = Arrays.asList(
-            criarMaterial("Garrafa PET", CategoriaMaterial.PLASTICO, DestinoMaterial.RECICLAGEM, UnidadeMedida.UNIDADE, joao),
-            criarMaterial("Caixa de Papelao", CategoriaMaterial.PAPEL, DestinoMaterial.RECICLAGEM, UnidadeMedida.KILOGRAMA, joao),
-            criarMaterial("Lata de refrigerante", CategoriaMaterial.METAL, DestinoMaterial.RECICLAGEM, UnidadeMedida.UNIDADE, joao),
-            criarMaterial("Garrafa de Vidro", CategoriaMaterial.VIDRO, DestinoMaterial.RECICLAGEM, UnidadeMedida.KILOGRAMA, joao),
-            criarMaterial("Casca de Fruta/Legume", CategoriaMaterial.ORGANICO, DestinoMaterial.COMPOSTAGEM, UnidadeMedida.KILOGRAMA, joao),
-            criarMaterial("resto de Comida", CategoriaMaterial.ORGANICO, DestinoMaterial.COMPOSTAGEM, UnidadeMedida.KILOGRAMA, joao),
-            criarMaterial("oleo de Cozinha Usado", CategoriaMaterial.OLEO, DestinoMaterial.DESCARTE_ESPECIAL, UnidadeMedida.LITRO, joao),
-            criarMaterial("Pilhas e Baterias", CategoriaMaterial.ELETRONICO, DestinoMaterial.DESCARTE_ESPECIAL, UnidadeMedida.UNIDADE, joao),
-            criarMaterial("Celular Quebrado", CategoriaMaterial.ELETRONICO, DestinoMaterial.REUSO, UnidadeMedida.UNIDADE, joao),
-            criarMaterial("pote de Vidro (Conserva)", CategoriaMaterial.VIDRO, DestinoMaterial.REUSO, UnidadeMedida.UNIDADE, joao)
-        );
-        materialRepository.saveAll(materiais);
-        System.out.println("Materiais criados.");
         
         // CRIAR PONTO DE COLETA 
         PontoColeta ecoponto = new PontoColeta();
@@ -103,12 +103,12 @@ public class DatabaseSeeder implements CommandLineRunner {
         ecoponto.setDono(maria);
 
         // Define as CATEGORIAS de materiais aceitas pelo ponto
-        Set<CategoriaMaterial> categoriasAceitas = new HashSet<>();
-        categoriasAceitas.add(CategoriaMaterial.PLASTICO);
-        categoriasAceitas.add(CategoriaMaterial.METAL);
-        categoriasAceitas.add(CategoriaMaterial.ELETRONICO);
+        Set<Material> materiaisAceitos = new HashSet<>();
+        materiaisAceitos.add(encontrarMaterial(materiais, "Garrafa PET"));
+        materiaisAceitos.add(encontrarMaterial(materiais, "Lata de refrigerante"));
+        materiaisAceitos.add(encontrarMaterial(materiais, "Pilhas e Baterias"));
         
-        ecoponto.setCategoriasAceitas(categoriasAceitas);
+        ecoponto.setMateriais(materiaisAceitos);
         
         pontoColetaRepository.save(ecoponto);
         System.out.println("Ponto de Coleta criado.");
@@ -140,13 +140,12 @@ public class DatabaseSeeder implements CommandLineRunner {
         System.out.println("Descartes criados.");
     }
     
-    private Material criarMaterial(String nome, CategoriaMaterial categoriaMaterial, DestinoMaterial destinoMaterial, UnidadeMedida unidadePadrao, Usuario usuario) {
+    private Material criarMaterial(String nome, CategoriaMaterial categoriaMaterial, DestinoMaterial destinoMaterial, UnidadeMedida unidadePadrao) {
         Material material = new Material();
         material.setNome(nome);
         material.setCategoria(categoriaMaterial);
         material.setDestino(destinoMaterial);
         material.setUnidadePadrao(unidadePadrao);
-        material.setUsuario(usuario);
         return material;
     }
 
