@@ -5,6 +5,7 @@ import api from '../services/api';
 import ColetorHeader from '../components/coletor/ColetorHeader';
 import PontosStats from '../components/coletor/PontosStats';
 import PontosList from '../components/coletor/PontosList';
+import EntregasList from '../components/coletor/EntregasList';
 import PontoModal from '../components/coletor/PontoModal';
 
 export default function HomeColetor() {
@@ -75,6 +76,40 @@ export default function HomeColetor() {
     setIsModalOpen(true);
   };
 
+  const handleAprovarEntrega = async (entregaId) => {
+    try {
+      console.log('Aprovando entrega:', entregaId);
+      await api.post(`/descartes/${entregaId}/status`, {
+        status: 'CONCLUIDO'
+      });
+      await loadData();
+    } catch (error) {
+      console.error('Erro ao aprovar entrega:', error);
+      console.error('Response:', error.response);
+      alert(`Erro ao aprovar entrega: ${error.response?.data?.message || error.message}`);
+    }
+  };
+
+  const handleNegarEntrega = async (entregaId) => {
+    try {
+      console.log('Negando entrega:', entregaId);
+      await api.post(`/descartes/${entregaId}/status`, {
+        status: 'CANCELADO'
+      });
+      await loadData();
+    } catch (error) {
+      console.error('Erro ao negar entrega:', error);
+      console.error('Response:', error.response);
+      alert(`Erro ao negar entrega: ${error.response?.data?.message || error.message}`);
+    }
+  };
+
+  // Calcular materiais únicos aceitos em todos os pontos
+  const materiaisUnicos = new Set();
+  pontos.forEach(ponto => {
+    ponto.materiais?.forEach(m => materiaisUnicos.add(m.id || m.nome));
+  });
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-500">
@@ -89,15 +124,24 @@ export default function HomeColetor() {
       
       <PontosStats 
         pontosAtivos={pontos.length} 
-        entregasRecebidas={entregas.length}
+        entregasPendentes={entregas.length}
+        materiaisAceitos={materiaisUnicos.size}
       />
       
-      <PontosList
-        pontos={pontos}
-        onEdit={handleEditPonto}
-        onDelete={handleDeletePonto}
-        onNew={handleNewPonto}
-      />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <PontosList
+          pontos={pontos}
+          onEdit={handleEditPonto}
+          onDelete={handleDeletePonto}
+          onNew={handleNewPonto}
+        />
+        
+        <EntregasList
+          entregas={entregas}
+          onAprovar={handleAprovarEntrega}
+          onNegar={handleNegarEntrega}
+        />
+      </div>
 
       <PontoModal
         isOpen={isModalOpen}
