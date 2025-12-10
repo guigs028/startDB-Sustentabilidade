@@ -133,7 +133,7 @@ export default function Profile() {
 
         {/* Meus Recentes Descartes */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Meus Recentes Descartes</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-4">Meus Descartes Recentes</h2>
           
           {descartes.length === 0 ? (
             <p className="text-gray-500 text-center py-4">Nenhum descarte registrado ainda</p>
