@@ -50,10 +50,10 @@ class PontoColetaControllerTest {
 
     @BeforeEach
     void setUp() {
-        List<CategoriaMaterial> categorias = Arrays.asList(
-            CategoriaMaterial.PLASTICO,
-            CategoriaMaterial.PAPEL
-        );
+        var material1 = new PontoColetaResponseDTO.MaterialResponseDTO(1L, "Garrafa PET", "PLASTICO", "RECICLAGEM");
+        var material2 = new PontoColetaResponseDTO.MaterialResponseDTO(2L, "Papelão", "PAPEL", "RECICLAGEM");
+        
+        List<PontoColetaResponseDTO.MaterialResponseDTO> materiais = Arrays.asList(material1, material2);
 
         pontoColetaResponse = new PontoColetaResponseDTO(
             1L,
@@ -65,7 +65,7 @@ class PontoColetaControllerTest {
             null,
             "João Coletor",
             "joao@example.com",
-            categorias
+            materiais
         );
     }
 
@@ -78,7 +78,7 @@ class PontoColetaControllerTest {
             "Ponto Eco",
             "Rua Test, 123",
             "1234-5678",
-            Arrays.asList(CategoriaMaterial.PLASTICO, CategoriaMaterial.PAPEL)
+            Arrays.asList(1L, 2L)
         );
 
         when(pontoColetaService.criarPontoColeta(any(PontoColetaDTO.class)))
@@ -95,8 +95,8 @@ class PontoColetaControllerTest {
             .andExpect(jsonPath("$.endereco").value("Rua Test, 123"))
             .andExpect(jsonPath("$.contato").value("1234-5678"))
             .andExpect(jsonPath("$.donoNome").value("João Coletor"))
-            .andExpect(jsonPath("$.categoriasAceitas").isArray())
-            .andExpect(jsonPath("$.categoriasAceitas[0]").value("PLASTICO"));
+            .andExpect(jsonPath("$.materiais").isArray())
+            .andExpect(jsonPath("$.materiais[0].categoria").value("PLASTICO"));
     }
 
     @Test
@@ -108,7 +108,7 @@ class PontoColetaControllerTest {
             "",
             "Rua Test, 123",
             "1234-5678",
-            Arrays.asList(CategoriaMaterial.PLASTICO, CategoriaMaterial.PAPEL)
+            Arrays.asList(1L)
         );
 
         // Act & Assert
@@ -133,9 +133,9 @@ class PontoColetaControllerTest {
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$[0].id").value(1))
             .andExpect(jsonPath("$[0].nome").value("Ponto Eco"))
-            .andExpect(jsonPath("$[0].categoriasAceitas").isArray())
-            .andExpect(jsonPath("$[0].categoriasAceitas[0]").value("PLASTICO"))
-            .andExpect(jsonPath("$[0].categoriasAceitas[1]").value("PAPEL"));
+            .andExpect(jsonPath("$[0].materiais").isArray())
+            .andExpect(jsonPath("$[0].materiais[0].categoria").value("PLASTICO"))
+            .andExpect(jsonPath("$[0].materiais[1].categoria").value("PAPEL"));
     }
 
 }
