@@ -203,12 +203,7 @@ export default function NovoDescarte() {
                 <li>• Você ainda não cadastrou materiais compatíveis com este ponto</li>
                 <li>• Todos os seus materiais já têm descartes pendentes ou aprovados</li>
               </ul>
-              <button
-                onClick={() => navigate('/materiais/novo')}
-                className="mt-6 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
-              >
-                Cadastrar Novo Material
-              </button>
+              
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

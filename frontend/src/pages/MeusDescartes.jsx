@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { Trash2, Plus } from 'lucide-react';
 
 export default function MeusDescartes() {
-  const navigate = useNavigate();
   const [descartes, setDescartes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('TODOS');
@@ -68,13 +66,7 @@ export default function MeusDescartes() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Meus Descartes</h1>
           <p className="text-gray-600">Acompanhe o status de todos os seus registros de descarte</p>
         </div>
-        <button
-          onClick={() => navigate('/materiais/novo')}
-          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
-        >
-          <Plus className="w-5 h-5" />
-          Novo Material
-        </button>
+        
       </div>
 
       {/* Filtros por Status */}
@@ -140,7 +132,7 @@ export default function MeusDescartes() {
                     {/* Material e Status */}
                     <div className="flex items-center gap-3 mb-3">
                       <h3 className="text-xl font-bold text-gray-900">
-                        {descarte.material?.nome || 'Material'}
+                        {descarte.material?.nome || 'Material'} {/* Buscar nome dos materiais */}
                       </h3>
                       <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${badge.color}`}>
                         <span>{badge.icon}</span>

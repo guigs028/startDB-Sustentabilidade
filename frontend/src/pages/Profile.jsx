@@ -142,7 +142,7 @@ export default function Profile() {
               {descartes.slice(0, 5).map((descarte) => (
                 <div key={descarte.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
                   <div>
-                    <p className="font-medium text-gray-900">{descarte.material?.nome || 'Material'}</p>
+                    <p className="font-medium text-gray-900">{descarte.material?.nome || 'Material'}</p> {/* Pegar nome de materiais */}
                     <p className="text-sm text-gray-500">
                       {descarte.quantidade} {descarte.unidadeMedida?.toLowerCase()} - {descarte.pontoColeta?.nome || 'Ponto de Coleta'}
                     </p>
