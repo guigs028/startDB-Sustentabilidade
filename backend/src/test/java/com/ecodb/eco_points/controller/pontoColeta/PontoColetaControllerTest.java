@@ -133,7 +133,8 @@ class PontoColetaControllerTest {
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$[0].id").value(1))
             .andExpect(jsonPath("$[0].nome").value("Ponto Eco"))
-            .andExpect(jsonPath("$[0].materiais").isArray());
+            .andExpect(jsonPath("$[0].materiais").isArray())
+            .andExpect(jsonPath("$[0].materiais[0].nome").value("Plástico"));
     }
 
 }
