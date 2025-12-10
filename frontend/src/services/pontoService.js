@@ -15,14 +15,19 @@ export const pontoService = {
 
   // POST /pontos - Cria novo ponto
   createPonto: async (pontoData) => {
-    // Backend espera PontoColetaDTO: nome, endereco, contato, materiaisAceitos
+    // Garantir que materiaisIds é um array de números
+    const materiaisIds = Array.isArray(pontoData.materiaisIds) 
+      ? pontoData.materiaisIds.filter(id => id != null) 
+      : [];
+    
     const payload = {
       nome: pontoData.nome,
       endereco: pontoData.endereco,
       contato: pontoData.contato,
       horarios: pontoData.horarios || 'Seg-Sex 08h-18h',
-      materiaisAceitos: pontoData.materiaisIds
+      materiaisAceitos: materiaisIds
     };
+    
     console.log('Criando ponto com payload:', payload);
     const response = await api.post('/pontos', payload);
     console.log('Ponto criado com sucesso:', response.data);
@@ -31,14 +36,19 @@ export const pontoService = {
 
   // PUT /pontos/{id} - Atualiza ponto existente
   updatePonto: async (id, pontoData) => {
-    // Backend espera PontoColetaDTO: nome, endereco, contato, materiaisAceitos
+    // Garantir que materiaisIds é um array de números
+    const materiaisIds = Array.isArray(pontoData.materiaisIds) 
+      ? pontoData.materiaisIds.filter(id => id != null) 
+      : [];
+    
     const payload = {
       nome: pontoData.nome,
       endereco: pontoData.endereco,
       contato: pontoData.contato,
       horarios: pontoData.horarios || 'Seg-Sex 08h-18h',
-      materiaisAceitos: pontoData.materiaisIds
+      materiaisAceitos: materiaisIds
     };
+    
     console.log('Atualizando ponto', id, 'com payload:', payload);
     const response = await api.put(`/pontos/${id}`, payload);
     console.log('Ponto atualizado com sucesso:', response.data);
@@ -57,10 +67,9 @@ export const pontoService = {
     return response.data;
   },
 
-  // GET /materials - Lista todos os materiais disponíveis
+  // GET /materiais - Lista todos os materiais disponíveis
   getMateriais: async () => {
-    const response = await api.get('/materials');
-    console.log('Materiais disponíveis:', response.data);
+    const response = await api.get('/materiais');
     return response.data;
   }
 };
