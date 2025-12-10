@@ -1,6 +1,5 @@
 package com.ecodb.eco_points.dto;
 
-import com.ecodb.eco_points.model.enums.CategoriaMaterial;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,8 +19,8 @@ public record PontoColetaDTO(
     @Size(min = 8, max = 50, message = "Contato deve ter entre 8 e 50 caracteres")
     String contato,
 
-    @NotNull(message = "Lista de categorias aceitas é obrigatória")
-    @Size(min = 1, message = "Pelo menos uma categoria deve ser informada")
-    List<CategoriaMaterial> categoriasAceitas
+    @NotNull(message = "Lista de materiais aceitos é obrigatória")
+    @Size(min = 1, message = "Pelo menos um material deve ser informado")
+    List<Long> materiaisAceitos
 ) {
 }

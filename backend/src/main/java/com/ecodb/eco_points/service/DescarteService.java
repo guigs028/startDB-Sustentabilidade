@@ -47,8 +47,8 @@ public class DescarteService {
                                 .orElseThrow(() -> new IllegalArgumentException("Material não encontrado"));
 
                 // validar se o Ponto aceita esta CATEGORIA de material
-                if (!pontoColeta.getCategoriasAceitas().contains(material.getCategoria())) {
-                        throw new IllegalArgumentException("Este ponto não aceita materiais da categoria: " + material.getCategoria());
+                if (!pontoColeta.getMateriais().contains(material)) {
+                        throw new IllegalArgumentException("Este ponto não aceita este tipo de material");
                 }
 
                 // recuperar usuário logado
