@@ -37,15 +37,17 @@ export default function HomeGerador() {
   };
 
   const filteredPontos = pontos.filter(ponto => {
+    // busca textual )Nome ou Endereço)
     const matchesSearch = ponto.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           ponto.endereco?.toLowerCase().includes(searchTerm.toLowerCase());
     
+    // filtra por Material 
     if (selectedMaterial) {
-       const matEncontrado = materiais.find(m => m.nome === selectedMaterial);
-       if (matEncontrado && ponto.categoriasAceitas) {
-          return matchesSearch && ponto.categoriasAceitas.includes(matEncontrado.categoria);
-       }
+        const aceitaMaterial = ponto.materiais?.some(m => m.nome === selectedMaterial);
+        
+        return matchesSearch && aceitaMaterial;
     }
+
     return matchesSearch;
   });
 
