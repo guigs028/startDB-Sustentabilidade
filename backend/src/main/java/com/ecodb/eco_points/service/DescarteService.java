@@ -112,4 +112,19 @@ public class DescarteService {
                 descarteRepository.save(descarte);
         }
 
+        public void cancelarSolicitacao(Long id, String emailUsuario) {
+                Descarte descarte = descarteRepository.findById(id)
+                        .orElseThrow(() -> new DescarteNotFoundException(id));
+
+                if (!descarte.getUsuario().getEmail().equals(emailUsuario)) {
+                        throw new UnauthorizedAccessException("Você não tem permissão para cancelar este descarte.");
+                }
+
+                if (descarte.getStatus() != StatusDescarte.PENDENTE) {
+                        throw new IllegalArgumentException("Não é possível cancelar um descarte que já foi processado.");
+                }
+
+                descarteRepository.delete(descarte);
+        }
+
 }
