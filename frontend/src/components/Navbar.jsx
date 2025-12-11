@@ -24,7 +24,7 @@ export default function Navbar() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
               <Leaf className="w-6 h-6 text-green-600" />
-              <span className="text-xl font-bold text-gray-900">EcoResiduos</span>
+              <span className="text-xl font-bold text-gray-900">EcoPoints</span>
             </div>
             
             <div className="flex items-center gap-6">
@@ -69,7 +69,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-2">
             <Leaf className="w-6 h-6 text-green-600" />
-            <span className="text-xl font-bold text-gray-900">EcoResiduos</span>
+            <span className="text-xl font-bold text-gray-900">EcoPoints</span>
           </div>
           
           <div className="flex items-center gap-6">

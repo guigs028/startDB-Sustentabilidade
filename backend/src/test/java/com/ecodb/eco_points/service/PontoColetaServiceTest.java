@@ -95,7 +95,6 @@ class PontoColetaServiceTest {
         pontoColeta.setHorarios("A definir");
         pontoColeta.setDono(usuarioColetor);
         
-        // CORREÇÃO: Usamos Set<Material> e setMateriais
         Set<Material> materiais = new HashSet<>();
         materiais.add(material1);
         materiais.add(material2);
