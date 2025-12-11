@@ -65,7 +65,7 @@ export default function Profile() {
   const countTotal = userType === 'COLETOR' ? pontos.length : descartes.length;
   const countAprovados = userType === 'COLETOR' 
     ? pontos.filter(p => p.ativo !== false).length
-    : descartes.filter(d => d.status === 'APROVADO' || d.status === 'CONCLUIDO').length;
+    : descartes.filter(d => d.status === 'APROVADO' || d.status === 'CONCLUIDO' || d.status === 'AGENDADO').length;
   const countMateriais = userType === 'COLETOR' ? materiaisUnicos.size : 0;
 
   if (loading) {

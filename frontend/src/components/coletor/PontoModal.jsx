@@ -136,7 +136,7 @@ export default function PontoModal({ isOpen, onClose, onSubmit, editingPonto = n
             </label>
             <input
               type="text"
-              placeholder="Ex: Rua das Flores, 123 (Mínimo 10 caracteres)"
+              placeholder="Ex: Rua das Flores, 123 - São Paulo (Mínimo 10 caracteres)"
               value={formData.endereco}
               minLength={10}
               onChange={(e) => {

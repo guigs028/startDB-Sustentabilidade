@@ -6,7 +6,8 @@ export default function StatusBadge({ status }) {
     'APROVADO': { bg: 'bg-green-100', text: 'text-green-800', icon: <CheckCircle className="w-3 h-3" />, label: 'Aprovado' },
     'PENDENTE': { bg: 'bg-[#FEF9C3]', text: 'text-yellow-800', icon: <Clock className="w-3 h-3" />, label: 'Pendente' },
     'NEGADO': { bg: 'bg-red-100', text: 'text-red-800', icon: <XCircle className="w-3 h-3" />, label: 'Negado' },
-    'CONCLUIDO': { bg: 'bg-blue-100', text: 'text-blue-800', icon: <CheckCircle className="w-3 h-3" />, label: 'Concluído' },
+    'CONCLUIDO': { bg: 'bg-green-100', text: 'text-green-800', icon: <CheckCircle className="w-3 h-3" />, label: 'Aprovado' },
+    'CANCELADO': { bg: 'bg-red-100', text: 'text-red-800', icon: <XCircle className="w-3 h-3" />, label: 'Negado' },
   };
   
   const config = styles[status] || styles['PENDENTE'];

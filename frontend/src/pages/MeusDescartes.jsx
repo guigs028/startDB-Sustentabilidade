@@ -42,7 +42,10 @@ export default function MeusDescartes() {
     ? descartes 
     : descartes.filter(d => {
         if (filterStatus === 'APROVADO') {
-          return d.status === 'CONCLUIDO';
+          return d.status === 'CONCLUIDO' || d.status === 'APROVADO' || d.status === 'AGENDADO';
+        }
+        if (filterStatus === 'NEGADO') {
+          return d.status === 'CANCELADO' || d.status === 'NEGADO';
         }
         
         return d.status === filterStatus;  
