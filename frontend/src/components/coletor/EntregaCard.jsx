@@ -3,7 +3,8 @@ export default function EntregaCard({ entrega, onAprovar, onNegar }) {
     <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
       <div className="flex justify-between items-start mb-3">
         <div>
-          <h4 className="font-semibold text-gray-900">{entrega.geradorNome || 'Gerador'}</h4>
+          <h4 className="font-semibold text-gray-900">{entrega.geradorNome || 'Gerador nome n funciona'}</h4> 
+          
           <p className="text-sm text-gray-600 mt-1">
             {entrega.materialNome} - {entrega.quantidade} {entrega.unidadeMedida || 'kg'}
           </p>

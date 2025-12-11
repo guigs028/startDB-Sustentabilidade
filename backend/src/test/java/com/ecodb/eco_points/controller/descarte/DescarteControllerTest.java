@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +27,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.ecodb.eco_points.controller.DescarteController;
 import com.ecodb.eco_points.dto.AtualizaStatusDTO;
@@ -43,7 +40,6 @@ import com.ecodb.eco_points.service.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ecodb.eco_points.config.SecurityConfig;
 import com.ecodb.eco_points.exception.GlobalExceptionHandler;
-import com.ecodb.eco_points.exception.UnauthorizedAccessException;
 
 @WebMvcTest(DescarteController.class)
 @Import({SecurityConfig.class, GlobalExceptionHandler.class})
@@ -118,7 +114,8 @@ public class DescarteControllerTest {
             LocalDateTime.now(),
             "Garrafa PET",
             "EcoPonto Central",
-            "Av. Principal, 100"
+            "Av. Principal, 100",
+            "JOAO"
         );
         
         List<DescarteResponseDTO> listaMock = Collections.singletonList(descarteResponseDTO);
@@ -130,7 +127,8 @@ public class DescarteControllerTest {
         mockMvc.perform(get("/api/v1/descartes/historico"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].pontoColetaNome").value("EcoPonto Central"));
+            .andExpect(jsonPath("$[0].pontoColetaNome").value("EcoPonto Central"))
+            .andExpect(jsonPath("$[0].geradorNome").value("JOAO"));
 
         verify(descarteService, times(1))
             .listarHistorico("gaucho@test.com");
@@ -143,7 +141,7 @@ public class DescarteControllerTest {
 
         DescarteResponseDTO pendenteDTO = new DescarteResponseDTO( 10L, "Material pendente", 
         2.0, "KG", StatusDescarte.PENDENTE, 
-            LocalDateTime.now().minusDays(1), "Plástico", "Meu Ponto", "Rua X"
+        LocalDateTime.now().minusDays(1), "Plástico", "Meu Ponto", "Rua X", "joao"
         );
         
         List<DescarteResponseDTO> listaMock = Collections.singletonList(pendenteDTO);
