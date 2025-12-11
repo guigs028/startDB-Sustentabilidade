@@ -123,7 +123,9 @@ export default function NovoDescarte() {
       setSuccess(true);
       
       setTimeout(() => {
-        navigate('/descartes');
+        navigate('/descartes', {
+          state: {novoRegistro: true}
+        });
       }, 2000);
     } catch (error) {
       console.error('Erro ao registrar:', error);
