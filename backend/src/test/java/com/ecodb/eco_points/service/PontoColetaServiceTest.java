@@ -108,7 +108,7 @@ class PontoColetaServiceTest {
     }
 
     @Test
-    @DisplayName("Should create collection point successfully")
+    @DisplayName("O ponto de coleta deve ser criado com sucesso.")
     void shouldCreatePontoColetaSuccessfully() {
         // Arrange - Passamos IDs (List<Long>)
         PontoColetaDTO dto = new PontoColetaDTO(
@@ -141,8 +141,8 @@ class PontoColetaServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw UnauthorizedAccessException when user tries to delete another user's point")
-    void shouldThrowUnauthorizedAccessExceptionWhenDeletingAnotherUsersPoint() {
+    @DisplayName("Deve lançar UnauthorizedAccessException quando o usuário tenta deletar o ponto de outro usuário")
+    void shouldThrowWhenDeletingOthersPoint() {
         // Arrange
         Usuario outroUsuario = new Usuario();
         outroUsuario.setId(2L);
@@ -165,7 +165,7 @@ class PontoColetaServiceTest {
 
     @Test
     @DisplayName("Deve listar pontos de coleta do usuário logado")
-    void deveListarPontosDoUsuarioLogado() {
+    void shouldListPointsOfLoggedUser() {
         // Arrange
         PontoColeta ponto1 = new PontoColeta();
         ponto1.setId(1L);
