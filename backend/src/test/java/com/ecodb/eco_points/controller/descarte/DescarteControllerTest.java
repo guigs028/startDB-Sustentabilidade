@@ -115,6 +115,7 @@ public class DescarteControllerTest {
             "Garrafa PET",
             "EcoPonto Central",
             "Av. Principal, 100",
+            "(51) 9999-9999",
             "JOAO"
         );
         
@@ -141,7 +142,7 @@ public class DescarteControllerTest {
 
         DescarteResponseDTO pendenteDTO = new DescarteResponseDTO( 10L, "Material pendente", 
         2.0, "KG", StatusDescarte.PENDENTE, 
-        LocalDateTime.now().minusDays(1), "Plástico", "Meu Ponto", "Rua X", "joao"
+        LocalDateTime.now().minusDays(1), "Plástico", "Meu Ponto", "Rua X", "(11) 8888-8888", "joao"
         );
         
         List<DescarteResponseDTO> listaMock = Collections.singletonList(pendenteDTO);

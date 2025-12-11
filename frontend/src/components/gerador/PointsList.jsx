@@ -13,8 +13,12 @@ export default function PointsList({ pontos }) {
           <div className="flex-1">
             <h3 className="font-bold text-gray-900 text-lg">{ponto.nome}</h3>
             <div className="flex items-center text-gray-500 text-sm mt-1 mb-3">
-              <MapPin className="w-4 h-4 mr-1 text-green-600" />
-              {ponto.endereco}
+              <div className="flex items-center text-gray-500 text-sm mt-1 mb-3">
+                <MapPin className="w-4 h-4 mr-1 text-green-600" />
+                {ponto.endereco}
+                <span className="mx-2 text-gray-300">|</span> 
+                {ponto.contato}
+            </div>
             </div>
             <div className="flex gap-2 flex-wrap">
               {ponto.materiais?.map((m, i) => (

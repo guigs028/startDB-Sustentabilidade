@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, Calendar } from 'lucide-react';
+import { Trash2, Calendar, MapPin, Phone, Package } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 
 const displayStatus = (status) => {
@@ -22,16 +22,37 @@ export default function DescarteCard({ descarte, onCancel }) {
             <StatusBadge status={displayStatus(descarte.status)} />
           </div>
 
-          <div className="space-y-1 text-sm text-gray-600">
-            <p>
-              <span className="font-semibold text-gray-900">Quantidade:</span> {descarte.quantidade} {descarte.unidadeMedida?.toLowerCase() || 'un'}
+          {/* Bloco de Detalhes - Agora Vertical */}
+          <div className="space-y-2 text-sm text-gray-600 mt-2">
+            
+            {/* Quantidade */}
+            <p className="flex items-center gap-2">
+              <span className="font-semibold text-gray-900 w-20">Quantidade:</span> 
+              <span>{descarte.quantidade} {descarte.unidadeMedida?.toLowerCase() || 'un'}</span>
             </p>
-            <p className="flex items-center gap-1">
-              <span className="font-semibold text-gray-900">Ponto:</span> {descarte.pontoColetaNome || 'Ponto de Coleta'}
+
+            {/* Ponto (Movi para cima para ficar junto do endereço) */}
+            <p className="flex items-center gap-2">
+              <span className="font-semibold text-gray-900 w-20">Local:</span> 
+              <span>{descarte.pontoColetaNome || 'Ponto de Coleta'}</span>
             </p>
-            <p className="flex items-center gap-1 text-gray-400 text-xs pt-1">
+
+            {/* Endereço */}
+            <p className="flex items-start gap-2">
+              <span className="font-semibold text-gray-900 w-20">Endereço:</span> 
+              <span className="flex-1">{descarte.pontoColetaEndereco || 'Não informado'}</span>
+            </p>
+
+            {/* Telefone */}
+            <p className="flex items-center gap-2">
+              <span className="font-semibold text-gray-900 w-20">Contato:</span> 
+              <span>{descarte.pontoColetaTelefone || 'N/A'}</span>
+            </p>
+
+            {/* Data */}
+            <p className="flex items-center gap-2 text-gray-400 text-xs pt-2">
                <Calendar className="w-3 h-3" />
-               {new Date(descarte.dataCriacao).toLocaleDateString('pt-BR')}
+               Registrado em {new Date(descarte.dataCriacao).toLocaleDateString('pt-BR')}
             </p>
           </div>
         </div>

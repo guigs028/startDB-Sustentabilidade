@@ -15,6 +15,7 @@ public record DescarteResponseDTO(
     String materialNome,
     String pontoColetaNome,
     String pontoColetaEndereco,
+    String pontoColetaTelefone, 
     String geradorNome
 ) {
 
@@ -32,6 +33,7 @@ public record DescarteResponseDTO(
             descarte.getMaterial().getNome(),
             descarte.getPontoColeta().getNome(),
             descarte.getPontoColeta().getEndereco(),
+            descarte.getPontoColeta().getContato(),
             descarte.getUsuario() != null ? descarte.getUsuario().getNome() : "Usuário Desconhecido"
         );
     }
