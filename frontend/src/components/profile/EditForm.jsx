@@ -61,7 +61,7 @@ export default function EditForm({ formData, handleChange, handleSubmit, loading
           onChange={handleChange}
           rows={3}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition resize-none"
-          placeholder="Rua, número, bairro, cidade"
+          placeholder="Ex: Rua das Flores, 123 - São Paulo (Mínimo 10 caracteres)"
           maxLength={200}
         />
         <p className="mt-1 text-sm text-gray-500">

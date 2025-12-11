@@ -3,7 +3,9 @@ import { Trash2, Calendar } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 
 const displayStatus = (status) => {
-    return status === 'CONCLUIDO' ? 'APROVADO' : status;
+    if (status === 'CONCLUIDO') return 'APROVADO';
+    if (status === 'CANCELADO') return 'NEGADO';
+    return status;
 };
 
 export default function DescarteCard({ descarte, onCancel }) {
