@@ -66,40 +66,41 @@ export default function MeusDescartes() {
       
       <DescartesHeader />
         {showOrientation && (
-          <div className="mb-6 bg-blue-50 border border-blue-200 rounded-xl p-4 relative animate-fade-in shadow-sm">
-            <button 
-              onClick={() => setShowOrientation(false)}
-              className="absolute top-4 right-4 text-blue-400 hover:text-blue-600"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            
-            <div className="flex gap-3">
-              <div className="bg-blue-100 p-2 rounded-lg h-fit">
-                <Info className="w-6 h-6 text-blue-600" />
-              </div>
-              <div>
-                <h3 className="font-bold text-blue-900 text-lg mb-1">
-                  Solicitação enviada! E agora?
-                </h3>
-                <ul className="text-blue-800 text-sm space-y-2 mt-2">
-                  <li className="flex items-center gap-2">
-                    <span className="bg-blue-200 text-blue-800 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                    Aguarde o ponto de coleta <strong>APROVAR</strong> sua solicitação.
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="bg-blue-200 text-blue-800 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                    Fique de olho no status aqui nesta tela.
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="bg-blue-200 text-blue-800 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">3</span>
-                    Assim que aprovado, leve o material ao endereço indicado.
-                  </li>
-                </ul>
-              </div>
+        <div className="mb-6 bg-blue-50 border border-blue-200 rounded-xl p-4 relative animate-fade-in shadow-sm">
+          <button 
+            onClick={() => setShowOrientation(false)}
+            className="absolute top-4 right-4 text-blue-400 hover:text-blue-600"
+          >
+            <X className="w-5 h-5" />
+          </button>
+          
+          <div className="flex gap-3">
+            <div className="bg-blue-100 p-2 rounded-lg h-fit">
+              <Info className="w-6 h-6 text-blue-600" />
+            </div>
+            <div>
+              <h3 className="font-bold text-blue-900 text-lg mb-1">
+                Solicitação criada! Próximos passos:
+              </h3>
+              <ul className="text-blue-800 text-sm space-y-2 mt-2">
+                <li className="flex items-center gap-2">
+                  <span className="bg-blue-200 text-blue-800 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                  {/* Texto alterado para refletir o fluxo correto */}
+                  Leve o material até o endereço do Ponto de Coleta.
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="bg-blue-200 text-blue-800 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                  Ao chegar, informe que realizou o registro pelo EcoPoints.
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="bg-blue-200 text-blue-800 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                  O responsável irá conferir e aprovar seu descarte no sistema.
+                </li>
+              </ul>
             </div>
           </div>
-        )}
+        </div>
+      )}
       <DescartesFilter 
         currentFilter={filterStatus} 
         setFilter={setFilterStatus} 
