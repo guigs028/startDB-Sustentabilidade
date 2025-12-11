@@ -162,4 +162,44 @@ class PontoColetaServiceTest {
         });
         verify(pontoColetaRepository, never()).delete(any(PontoColeta.class));
     }
+
+    @Test
+    @DisplayName("Deve listar pontos de coleta do usuário logado")
+    void deveListarPontosDoUsuarioLogado() {
+        // Arrange
+        PontoColeta ponto1 = new PontoColeta();
+        ponto1.setId(1L);
+        ponto1.setNome("Ponto Central");
+        ponto1.setEndereco("Rua A, 100");
+        ponto1.setContato("9999-8888");
+        ponto1.setHorarios("8h-18h");
+        ponto1.setDono(usuarioColetor);
+        ponto1.setMateriais(new HashSet<>(Arrays.asList(material1)));
+
+        PontoColeta ponto2 = new PontoColeta();
+        ponto2.setId(2L);
+        ponto2.setNome("Ponto Norte");
+        ponto2.setEndereco("Rua B, 200");
+        ponto2.setContato("8888-7777");
+        ponto2.setHorarios("9h-17h");
+        ponto2.setDono(usuarioColetor);
+        ponto2.setMateriais(new HashSet<>(Arrays.asList(material1, material2)));
+
+        when(pontoColetaRepository.findByDono(usuarioColetor))
+            .thenReturn(Arrays.asList(ponto1, ponto2));
+
+        // Act
+        var resultado = pontoColetaService.listarMeusPontosColeta();
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(2, resultado.size());
+        assertEquals("Ponto Central", resultado.get(0).nome());
+        assertEquals("Ponto Norte", resultado.get(1).nome());
+        assertEquals("João Coletor", resultado.get(0).donoNome());
+        assertEquals(1, resultado.get(0).materiais().size());
+        assertEquals(2, resultado.get(1).materiais().size());
+        
+        verify(pontoColetaRepository, times(1)).findByDono(usuarioColetor);
+    }
 }
