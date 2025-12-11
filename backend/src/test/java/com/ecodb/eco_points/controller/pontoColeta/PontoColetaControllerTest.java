@@ -24,7 +24,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.ecodb.eco_points.controller.PontoColetaController;
 import com.ecodb.eco_points.dto.PontoColetaDTO;
 import com.ecodb.eco_points.dto.PontoColetaResponseDTO;
-import com.ecodb.eco_points.model.enums.CategoriaMaterial;
 import com.ecodb.eco_points.service.PontoColetaService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

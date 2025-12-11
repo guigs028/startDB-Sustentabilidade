@@ -17,7 +17,6 @@ export default function PontosList({ pontos, onEdit, onDelete, onNew }) {
 
       {pontos.length === 0 ? (
         <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100">
-          <div className="text-6xl mb-4">📍</div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
             Nenhum ponto cadastrado
           </h3>

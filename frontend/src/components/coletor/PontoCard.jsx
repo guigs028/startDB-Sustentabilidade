@@ -1,4 +1,4 @@
-import { MapPin, Clock, Pencil, Trash2 } from 'lucide-react';
+import { MapPin, Clock, Pencil, Trash2, Phone } from 'lucide-react';
 
 export default function PontoCard({ ponto, onEdit, onDelete }) {
   return (
@@ -25,7 +25,8 @@ export default function PontoCard({ ponto, onEdit, onDelete }) {
 
         {ponto.contato && (
           <div className="flex items-center gap-2 text-gray-600">
-            <span className="text-sm">📞 {ponto.contato}</span>
+            <Phone className="w-4 h-4 flex-shrink-0" />
+            <span className="text-sm"> {ponto.contato}</span>
           </div>
         )}
       </div>
