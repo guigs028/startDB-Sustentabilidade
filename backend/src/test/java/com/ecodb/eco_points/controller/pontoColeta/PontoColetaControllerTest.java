@@ -77,7 +77,9 @@ class PontoColetaControllerTest {
             "Ponto Eco",
             "Rua Test, 123",
             "1234-5678",
-            Arrays.asList(1L, 2L)
+            Arrays.asList(1L, 2L),
+            -23.55052,
+            -46.633308
         );
 
         when(pontoColetaService.criarPontoColeta(any(PontoColetaDTO.class)))
@@ -107,7 +109,9 @@ class PontoColetaControllerTest {
             "",
             "Rua Test, 123",
             "1234-5678",
-            Arrays.asList(1L)
+            Arrays.asList(1L),
+            -23.55052,
+            -46.633308
         );
 
         // Act & Assert

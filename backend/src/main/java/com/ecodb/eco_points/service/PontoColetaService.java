@@ -39,20 +39,19 @@ public class PontoColetaService {
     @Transactional
     public PontoColetaResponseDTO criarPontoColeta(PontoColetaDTO dto) {
         Usuario usuarioLogado = obterUsuarioLogado();
-
-        // Validar se os materiais existem
         Set<Material> materiais = validarEObterMateriais(dto.materiaisAceitos());
 
         PontoColeta pontoColeta = new PontoColeta();
         pontoColeta.setNome(dto.nome());
         pontoColeta.setEndereco(dto.endereco());
         pontoColeta.setContato(dto.contato());
-        pontoColeta.setHorarios("A definir"); // Valor padrão
+        pontoColeta.setHorarios("A definir"); 
+        pontoColeta.setLatitude(dto.latitude());
+        pontoColeta.setLongitude(dto.longitude());
         pontoColeta.setDono(usuarioLogado);
         pontoColeta.setMateriais(materiais);
 
         PontoColeta pontoSalvo = pontoColetaRepository.save(pontoColeta);
-
         return converterParaResponseDTO(pontoSalvo);
     }
 
@@ -88,7 +87,11 @@ public class PontoColetaService {
         ponto.setNome(dto.nome());
         ponto.setEndereco(dto.endereco());
         ponto.setContato(dto.contato());
+
         ponto.setMateriais(materiais);
+
+        ponto.setLatitude(dto.latitude());
+        ponto.setLongitude(dto.longitude());
 
         PontoColeta pontoAtualizado = pontoColetaRepository.save(ponto);
 

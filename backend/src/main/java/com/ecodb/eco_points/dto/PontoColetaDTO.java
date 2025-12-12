@@ -21,6 +21,12 @@ public record PontoColetaDTO(
 
     @NotNull(message = "Lista de materiais aceitos é obrigatória")
     @Size(min = 1, message = "Pelo menos um material deve ser informado")
-    List<Long> materiaisAceitos
+    List<Long> materiaisAceitos,
+
+    @NotNull(message = "A localização no mapa é obrigatória")
+    Double latitude,
+
+    @NotNull(message = "Longitude é obrigatória")
+    Double longitude
 ) {
 }

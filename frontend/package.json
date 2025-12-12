@@ -14,9 +14,11 @@
     "flowbite": "^2.5.2",
     "flowbite-react": "^0.12.12",
     "jwt-decode": "^4.0.0",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.556.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.10.1"
   },
   "devDependencies": {

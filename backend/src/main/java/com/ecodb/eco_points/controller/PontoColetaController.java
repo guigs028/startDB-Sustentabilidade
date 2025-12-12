@@ -45,7 +45,7 @@ public class PontoColetaController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('COLETOR')")
+    @PreAuthorize("hasAuthority('COLETOR')") // 
     public ResponseEntity<PontoColetaResponseDTO> criarPontoColeta(
             @Valid @RequestBody PontoColetaDTO dto) {
         PontoColetaResponseDTO response = pontoColetaService.criarPontoColeta(dto);

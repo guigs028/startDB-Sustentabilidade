@@ -21,7 +21,10 @@ export const pontoService = {
       endereco: pontoData.endereco,
       contato: pontoData.contato,
       horarios: pontoData.horarios || 'Seg-Sex 08h-18h',
-      materiaisAceitos: materiaisIds
+      materiaisAceitos: materiaisIds,
+      latitude: pontoData.latitude,   
+      longitude: pontoData.longitude
+
     };
     
     const response = await api.post('/pontos', payload);
@@ -38,7 +41,9 @@ export const pontoService = {
       endereco: pontoData.endereco,
       contato: pontoData.contato,
       horarios: pontoData.horarios || 'Seg-Sex 08h-18h',
-      materiaisAceitos: materiaisIds
+      materiaisAceitos: materiaisIds,
+      latitude: pontoData.latitude,   
+      longitude: pontoData.longitude
     };
     
     const response = await api.put(`/pontos/${id}`, payload);

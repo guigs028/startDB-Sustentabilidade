@@ -115,7 +115,9 @@ class PontoColetaServiceTest {
             "Ponto Eco",
             "Rua Test, 123",
             "1234-5678",
-            Arrays.asList(1L, 2L) 
+            Arrays.asList(1L, 2L),
+            -23.55052,
+            -46.633308
         );
 
         // Mocks necessários para o findById dentro do loop validarEObterMateriais
