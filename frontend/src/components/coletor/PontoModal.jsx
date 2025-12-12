@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { pontoService } from '../../services/pontoService';
+import PhoneInput from '../ui/PhoneInput';
 
 export default function PontoModal({ isOpen, onClose, onSubmit, editingPonto = null }) {
   const [formData, setFormData] = useState({
@@ -160,11 +161,11 @@ export default function PontoModal({ isOpen, onClose, onSubmit, editingPonto = n
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Contato <span className="text-red-500">*</span>
             </label>
-            <input
-              type="text"
-              placeholder="Ex: (11) 98765-4321"
+            <PhoneInput
+              name="contato"
               value={formData.contato}
-              onChange={(e) => setFormData({ ...formData, contato: e.target.value })}
+              onChange={e => setFormData({ ...formData, contato: e.target.value })}
+              placeholder="Ex: (11) 98765-4321"
               className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               required
             />
