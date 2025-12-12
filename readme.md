@@ -11,7 +11,7 @@
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=swagger&logoColor=black)
-
+![Leaflet](https://img.shields.io/badge/Leaflet-199900?style=flat&logo=leaflet&logoColor=white)
 
 # EcoPoints — Sistema de Gestão de Resíduos
 **Descarte Consciente, Impacto Real.**
@@ -31,26 +31,26 @@ Enquanto soluções tradicionais focam na burocracia empresarial e gestão de do
 
 > **Nota de Escopo:** O EcoPoints não realiza a logística de transporte (coleta física). O sistema viabiliza o modelo de **Entrega Voluntária**, fornecendo a inteligência e a localização necessárias para que o gerador leve o resíduo ao destino correto.
 
+> **Localização do Mapa:** O sistema foi desenvolvido com foco exclusivo na cidade de **Porto Alegre/RS**. A localização padrão dos mapas está **configurada manualmente** para esta região. Por motivos de escopo de projeto.
 ## Demonstração do Sistema
 ![Demonstração do Sistema](.github/assets/demo.gif)
 
 
 
 ## Funcionalidades principais do sistema
-#### Gerador 
-- Busca por material 
-- Visualização de pontos de coleta baseados no material ou local
-- Registro e histórico de descartes com status
+#### 🌍 Para o Gerador (Cidadão)
+- **Busca Híbrida:** Alternância entre visualização em **Lista** e **Mapa Interativo**.
+- **Filtros Inteligentes:** O mapa atualiza automaticamente ao buscar por nome ou filtrar por tipo de material (ex: mostrar apenas pontos que aceitam "Vidro").
+- **Histórico:** Registro completo e status dos descartes realizados.
 
-#### Coletor
-- Cadastro ilimitado de pontos de coleta
-- Seleção precisa dos materiais aceitos de acordo com o ponto de coleta
-- Dashboard com todos os pontos
-- Lista de descartes pendentes → Aprovar ou Negar
+#### ♻️ Para o Coletor (ONGs / Empresas)
+- **Cadastro com Pin Picker:** Definição exata da localização do ponto clicando diretamente no mapa.
+- **Gestão de Materiais:** Seleção precisa do que cada ponto aceita.
+- **Fluxo de Aprovação:** Dashboard para Aprovar ou Negar descartes pendentes.
 
 
 ## Tecnologias
-| Categoria | Stack Tecnológico |
+| Categoria | Tecnologias  |
 |:--- |:--- |
 | **Backend** | Java 17, Spring Boot 3.4, Spring Security (JWT), Lombok, Data JPA |
 | **Frontend** | React 19 (Javascript), Vite, Tailwind CSS, Flowbite, Axios |
@@ -90,7 +90,7 @@ Após isso a aplicação estará rodando em: http://localhost:5173/
 
 #### Documentação do projeto
 - Swagger - http://localhost:8080/swagger-ui/index.html  (necessario estar com o projeto rodando)
-- Wiki - https://github.com/guigs028/startDB-Sustentabilidade/wiki
+- Wiki - https://github.com/guigs028/startDB-Sustentabilidade/wiki (Tudo sobre o projeto)
 
 ## Contribuição
 
