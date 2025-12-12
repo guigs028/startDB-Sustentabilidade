@@ -5,6 +5,7 @@ import HowItWorks from "../components/home/HowItWorks";
 import ImpactSection from "../components/home/ImpactSection";
 import FeaturesSection from "../components/home/FeaturesSection";
 import AuthSection from "../components/home/AuthSection";
+import MaterialsSection from "../components/home/MaterialsSection";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <HeroSection />
       <HowItWorks />
       <ImpactSection />
+      <MaterialsSection />
       <FeaturesSection />
       <AuthSection />
       <Footer />

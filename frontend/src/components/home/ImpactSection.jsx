@@ -1,4 +1,4 @@
-import { Search, BookOpen, Recycle } from "lucide-react";
+import { Search, Link, Recycle } from "lucide-react"; // Troquei BookOpen por Link
 
 export default function ImpactSection() {
   return (
@@ -38,18 +38,19 @@ export default function ImpactSection() {
 
             <div className="flex gap-6 items-start">
               <div className="flex-shrink-0 w-14 h-14 bg-brand-500 rounded-2xl flex items-center justify-center shadow-lg">
-                <BookOpen className="w-8 h-8 text-white" />
+                <Link className="w-8 h-8 text-white" />
               </div>
               <div>
                 <h4 className="text-xl font-bold text-gray-900 mb-2">
-                  Educação Prática
+                  Conexão Direta
                 </h4>
                 <p className="text-gray-600 leading-relaxed">
-                  Informações sobre como preparar cada resíduo para descarte
+                  Ligamos você aos pontos de coleta ideais para o seu material
                 </p>
               </div>
             </div>
 
+            {/* Item 3 - Gestão */}
             <div className="flex gap-6 items-start">
               <div className="flex-shrink-0 w-14 h-14 bg-brand-500 rounded-2xl flex items-center justify-center shadow-lg">
                 <Recycle className="w-8 h-8 text-white" />
@@ -59,7 +60,7 @@ export default function ImpactSection() {
                   Gestão de Descarte
                 </h4>
                 <p className="text-gray-600 leading-relaxed">
-                  Registre e acompanhe o status dos descartes
+                  Registre e acompanhe o status dos descartes em tempo real
                 </p>
               </div>
             </div>
