@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Input from "../ui/Input";
+import PhoneInput from '../ui/PhoneInput';
 import { getUserRole, getRedirectPathByRole } from "../../utils/jwtUtils";
 
 export default function AuthSection() {
@@ -78,7 +79,7 @@ export default function AuthSection() {
           {!isLogin && (
             <>
               <Input name="nome" placeholder="Nome Completo" onChange={handleChange} required />
-              <Input name="telefone" placeholder="Telefone" onChange={handleChange} required />
+              <PhoneInput name="telefone" value={formData.telefone} onChange={handleChange} required />
               <Input name="endereco" placeholder="Endereço" onChange={handleChange} required />
 
               <div className="space-y-3">

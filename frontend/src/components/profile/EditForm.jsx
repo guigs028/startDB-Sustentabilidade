@@ -1,4 +1,5 @@
 import { User, Phone, MapPin, Save } from 'lucide-react';
+import PhoneInput from '../ui/PhoneInput';
 
 export default function EditForm({ formData, handleChange, handleSubmit, loading, onCancel }) {
   return (
@@ -33,14 +34,12 @@ export default function EditForm({ formData, handleChange, handleSubmit, loading
             Telefone
           </div>
         </label>
-        <input
-          type="tel"
+        <PhoneInput
           name="telefone"
           value={formData.telefone}
           onChange={handleChange}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
           placeholder="(11) 99999-9999"
-          maxLength={15}
         />
         <p className="mt-1 text-sm text-gray-500">
           Entre 10 e 15 caracteres
